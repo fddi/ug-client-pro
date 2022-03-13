@@ -1,0 +1,21 @@
+export const zh_cn = {
+    loginByAccount: '账号登陆',
+    loginByScan: '扫码登陆',
+    alertRequireUsername: "请填写正确的用户名",
+    alertRequirePwd: "请填写密码",
+    errorUsernameOrPassword: "用户名或密码错误",
+    login: "登陆",
+    callAdmin: '联系管理员',
+    ok: "确定",
+    cancel: "取消",
+    changePassword: '修改密码',
+    alertPasswordReg: '设置8位以上复杂密码(包含大小写字母，数字及特殊字符)',
+    username: '用户名',
+    rememberUsername: '记住账号',
+    oldPassword: '原密码',
+    newPassword: '新密码',
+    confirmPassword: '确认密码',
+    errorConfirmPassword: '两次密码输入不一致',
+    appScan: 'App扫一扫',
+    appDl: 'App下载'
+};
