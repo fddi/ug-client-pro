@@ -24,7 +24,6 @@ export default function LoginByAccount(props) {
     const pwRef = useRef(null);
 
     function onFinish(values) {
-        console.log(values)
         if (values.userName === 'demo' && values.password === 'demo') {
             localStorage.setItem(TAG.userName, values.userName);
             props && props.jump();

@@ -10,6 +10,7 @@ import MainHeader from '../components/index/MainHeader'
 import logo from '../asset/icon.png'
 import TabFragment from '../components/index/TabFragment';
 import FetchTo from '../util/FetchTo';
+const { Header, Content, Sider } = Layout
 export default function Index(props) {
     const [jump, setJump] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function Index(props) {
             }
         }), 120000).then(response => response.json())
             .then(result => {
-                if (result && result.resultCode === '200') {
+                if (result && result.resultCode === 200) {
                     const menu1 = result.resultData.children;
                     let menu2 = [];
                     if (!StringUtils.isEmpty(menu1) && menu1.length > 0) {
@@ -42,9 +43,9 @@ export default function Index(props) {
     function handleMenuClick(e) {
         let tree = menuTree;
         if (e.key.indexOf("menu-top-") >= 0) {
-            for (let i = 0; i < menuTop.length; i++) {
-                if (e.key === "menu-top-" + menuTop[i].key) {
-                    tree = menuTop[i].children;
+            for (let i = 0; i < menuTree.top.length; i++) {
+                if (e.key === "menu-top-" + menuTree.top[i].key) {
+                    tree.left = menuTree.top[i].children;
                     setMenuTree(tree)
                     break;
                 }

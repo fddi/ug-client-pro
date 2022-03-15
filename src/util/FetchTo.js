@@ -60,7 +60,7 @@ export const signData = function (paramsStr, key) {
   return hmacSHA256(data, key);
 }
 
-export default fetchTo = function (fetch_promise, timeout) {
+export default function fetchTo(fetch_promise, timeout) {
   let abort_fn = null;
   const abort_promise = new Promise((resolve, reject) => {
     abort_fn = () => {

@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Tabs } from 'antd';
 import { ClearOutlined } from '@ant-design/icons'
 import Loadable from 'react-loadable'
-import Workbench from '../../page/Workbench'
+import Workbench from '../../page/WorkBench'
 import TabProvider from './TabProvider';
 import StringUtils from '../../util/StringUtils';
 import RoutesIndex from '../../router/RoutesIndex';
 import Redirect404 from '../../page/404';
 import Hold from '../../page/Hold';
 
+const TabPane = Tabs.TabPane;
 export default function TabFragment(props) {
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
+
+    useEffect(() => {
+        addTabPage(props.activeMenu)
+    }, [props.activeMenu]);
 
     const onTabEdit = (targetKey, action) => {
         if (action !== "remove") {
@@ -40,6 +45,7 @@ export default function TabFragment(props) {
 
 
     const addTabPage = (menu) => {
+        debugger
         let geted = false;
         if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
             return
@@ -107,7 +113,7 @@ export default function TabFragment(props) {
             }
         } else {
             LoadableComponent = Loadable({
-                loader: () => import(`../../pages/${component}`),
+                loader: () => import(`../../page/${component}`),
                 loading: Hold
             })
         }

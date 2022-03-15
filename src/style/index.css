@@ -6,13 +6,17 @@ body,
   padding: 0;
 }
 
-figure pre{
-  font-family     : "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", "monospace";
-  border-radius   : 3px;
+figure pre {
+  font-family  : "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", "monospace";
+  border-radius: 3px;
 }
 
 .ant-layout {
   height: 100vh;
+}
+
+.header {
+  padding   : 0px;
 }
 
 .ant-layout-content {
@@ -49,7 +53,6 @@ figure pre{
   white-space   : nowrap;
   max-width     : 120px;
   text-overflow : ellipsis;
-  overflow      : hidden;
 }
 
 #menu_sider.ant-layout-sider-collapsed .logo h1 {
@@ -69,9 +72,8 @@ figure pre{
 }
 
 .content {
-  padding-top   : 6px;
+  padding-top   : 1px;
   padding-left  : 1px;
   display       : flex;
   flex-direction: column;
 }
-

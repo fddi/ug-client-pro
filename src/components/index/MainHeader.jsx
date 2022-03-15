@@ -66,7 +66,7 @@ export default function HeaderView(props) {
                     key="menu-header-1"
                     theme="light"
                     mode="horizontal"
-                    style={{ lineHeight: '65px' }}
+                    style={{ lineHeight: '64px' }}
                     onClick={(e) => { handleMenuClick(e) }}
                     selectedKeys={selectedKeys}
                     onSelect={(e) => { handleMenuSelect(e) }}

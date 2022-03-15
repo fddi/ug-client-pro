@@ -5,14 +5,14 @@ import {
 import asyncComponent from "./util/AsyncComponent";
 
 const Login = asyncComponent(() => import('./page/Login'));
-const Admin = asyncComponent(() => import('./page/Admin'));
+const Index = asyncComponent(() => import('./page/Index'));
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/index" element={<Index />} />
       </Routes>
     </BrowserRouter>
   );
