@@ -1,0 +1,60 @@
+{
+    "resultCode": 200,
+    "resultData": {
+        "key": 1,
+        "title": "根节点",
+        "value": "/index/workbench",
+        "icon": "icon",
+        "children": [
+            {
+                "children": [
+                    {
+                        "key": 111,
+                        "title": "远程调用",
+                        "value": "",
+                        "icon": "bars",
+                        "children": [
+                            {
+                                "key": 1111,
+                                "title": "iframe调用",
+                                "value": "/index/dll",
+                                "icon": "bars"
+                            },
+                            {
+                                "key": 1113,
+                                "title": "微服务调用",
+                                "value": "/index/activex",
+                                "icon": "bars"
+                            }
+                        ]
+                    }
+                ],
+                "key": 11,
+                "title": "调用示例",
+                "value": "",
+                "icon": "bars"
+            },
+            {
+                "children": [
+                    {
+                        "key": 121,
+                        "title": "404页面",
+                        "value": "/index/404",
+                        "icon": "bars"
+                    },
+                    {
+                        "key": 122,
+                        "title": "加载等待页面",
+                        "value": "/index/hold",
+                        "icon": "bars"
+                    }
+                ],
+                "key": 12,
+                "title": "插件示例",
+                "value": "",
+                "icon": "bars"
+            }
+        ]
+    },
+    "resultMsg": "操作成功"
+}

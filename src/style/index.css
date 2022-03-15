@@ -5,3 +5,73 @@ body,
   margin : 0;
   padding: 0;
 }
+
+figure pre{
+  font-family     : "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", "monospace";
+  border-radius   : 3px;
+}
+
+.ant-layout {
+  height: 100vh;
+}
+
+.ant-layout-content {
+  overflow: auto;
+}
+
+.main-sider {
+  overflow: auto;
+}
+
+.main-sider.ant-layout-sider-collapsed {
+  overflow: visible;
+}
+
+#menu_sider .logo {
+  height         : 64px;
+  padding        : 16px 4px;
+  display        : flex;
+  flex-flow      : row;
+  justify-content: center;
+}
+
+#menu_sider .logo img {
+  margin-right: 5px;
+  width       : 32px;
+  height      : 32px;
+}
+
+#menu_sider .logo h1 {
+  line-height   : 32px;
+  font-size     : 16px;
+  color         : #ffffff;
+  vertical-align: middle;
+  white-space   : nowrap;
+  max-width     : 120px;
+  text-overflow : ellipsis;
+  overflow      : hidden;
+}
+
+#menu_sider.ant-layout-sider-collapsed .logo h1 {
+  display: none;
+}
+
+#menu_sider.ant-layout-sider-collapsed .nav-text {
+  display: none;
+}
+
+#menu_sider.ant-layout-sider-collapsed .ant-menu-submenu-vertical>.ant-menu-submenu-title:after {
+  display: none;
+}
+
+#menu_sider.ant-layout-sider-collapsed .ant-menu-sub .nav-text {
+  display: inline-block;
+}
+
+.content {
+  padding-top   : 6px;
+  padding-left  : 1px;
+  display       : flex;
+  flex-direction: column;
+}
+

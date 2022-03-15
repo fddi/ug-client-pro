@@ -17,5 +17,9 @@ export const zh_cn = {
     confirmPassword: '确认密码',
     errorConfirmPassword: '两次密码输入不一致',
     appScan: 'App扫一扫',
-    appDl: 'App下载'
+    appDl: 'App下载',
+    alertImgType: '限jpg或png格式的图片!',
+    alertImgSize: '图片大小必须在2MB以内!',
+    tipUploadFile: '点击或拖动上传',
+    uploadLogo: '上传头像'
 };
