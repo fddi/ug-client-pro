@@ -72,8 +72,8 @@ figure pre {
 }
 
 .content {
-  padding-top   : 1px;
-  padding-left  : 1px;
+  padding-top   : 2px;
+  padding-left  : 2px;
   display       : flex;
   flex-direction: column;
 }

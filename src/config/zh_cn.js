@@ -21,5 +21,6 @@ export const zh_cn = {
     alertImgType: '限jpg或png格式的图片!',
     alertImgSize: '图片大小必须在2MB以内!',
     tipUploadFile: '点击或拖动上传',
-    uploadLogo: '上传头像'
+    uploadLogo: '上传头像',
+    error404: '内容走丢了！'
 };

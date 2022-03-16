@@ -9,7 +9,7 @@ export default function Redirect404(props) {
                <img alt="" src={Icon404} />
                <br />
                <br />
-               <p style={{ fontSize: 20, fontWeight: "bold" }}>{lag.loadFail}</p>
+               <p style={{ fontSize: 20, fontWeight: "bold" }}>{lag.error404}</p>
           </div>
      );
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Modal, Progress, } from 'antd';
-import { UserOutlined, PoweroffOutlined, CloudDownloadOutlined, RollbackOutlined, } from '@ant-design/icons'
+import { Badge, Col, Menu, Modal, Progress, Row, } from 'antd';
+import { UserOutlined, PoweroffOutlined, MessageOutlined, RollbackOutlined, } from '@ant-design/icons'
 import { lag } from '../../config/lag'
 import StringUtils from '../../util/StringUtils';
 import { Link } from 'react-router-dom';
@@ -20,9 +20,11 @@ export default function HeaderView(props) {
      function handleMenuClick(e) {
           switch (parseInt(e.key)) {
                case 101:
-                    props.linkToLogin();
                     break;
                case 102:
+                    break;
+               case 103:
+                    props.linkToLogin();
                     break;
                default:
                     props.menuClick(e)
@@ -61,25 +63,39 @@ export default function HeaderView(props) {
      }
 
      return (
-          <div>
-               <Menu
-                    key="menu-header-1"
-                    theme="light"
-                    mode="horizontal"
-                    style={{ lineHeight: '64px' }}
-                    onClick={(e) => { handleMenuClick(e) }}
-                    selectedKeys={selectedKeys}
-                    onSelect={(e) => { handleMenuSelect(e) }}
-               >
-                    {buildItems(props.menus)}
-                    <SubMenu key="header-sm-1" style={{ float: 'right' }}
-                         title={<span><UserOutlined />{props.nickName}</span>}>
-                         <Menu.Item key="102">
-                              <Link to="/index" replace={true}>
-                                   <RollbackOutlined />返回首页</Link></Menu.Item>
-                         <Menu.Item key="101"><PoweroffOutlined />退出登录</Menu.Item>
-                    </SubMenu>
-               </Menu>
-          </div>
+          <Row>
+               <Col flex="auto">
+                    <Menu
+                         key="menu-header-1"
+                         theme="light"
+                         mode="horizontal"
+                         style={{ lineHeight: '64px' }}
+                         onClick={(e) => { handleMenuClick(e) }}
+                         selectedKeys={selectedKeys}
+                         onSelect={(e) => { handleMenuSelect(e) }}
+                    >
+                         {buildItems(props.menus)}
+                    </Menu></Col>
+               <Col flex="120px">
+                    <Menu
+                         key="menu-header-2"
+                         theme="light"
+                         mode="horizontal"
+                         style={{ lineHeight: '64px' }}
+                         selectable={false}
+                         onClick={(e) => { handleMenuClick(e) }}>
+                         <Menu.Item key="101">
+                              <Badge count={2} size='small'>
+                                   <MessageOutlined />
+                              </Badge>
+                         </Menu.Item>
+                         <SubMenu key="header-sm-1" style={{ float: 'right' }}
+                              title={props.nickName}>
+                              <Menu.Item key="102">
+                                   <Link to="/index" replace={true}><UserOutlined />个人中心</Link></Menu.Item>
+                              <Menu.Item key="103"><PoweroffOutlined />退出登录</Menu.Item>
+                         </SubMenu>
+                    </Menu></Col>
+          </Row>
      );
 } 

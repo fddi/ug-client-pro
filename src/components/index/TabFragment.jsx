@@ -45,7 +45,6 @@ export default function TabFragment(props) {
 
 
     const addTabPage = (menu) => {
-        debugger
         let geted = false;
         if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
             return
