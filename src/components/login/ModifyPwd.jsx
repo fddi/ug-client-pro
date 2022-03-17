@@ -30,7 +30,11 @@ export default function ModifyPwd(props) {
                 <FormItem
                     label="用户名"
                     name="userName"
-                    rules={[{ required: true, message: '输入用户名!' }]}
+                    rules={[{
+                        required: true,
+                        pattern: /^[A-Za-z0-9]{4,16}/,
+                        message: '输入用户名!'
+                    }]}
                     hasFeedback
                 >
                     <Input onPressEnter={(e) => { handlePressEnter(e, 'p1') }} />
@@ -47,7 +51,11 @@ export default function ModifyPwd(props) {
                 <FormItem
                     label={lag.newPassword}
                     name="newPassword"
-                    rules={[{ required: true, message: lag.alertRequirePwd }]}
+                    rules={[{
+                        required: true,
+                        pattern: /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}/,
+                        message: lag.alertRequirePwd
+                    }]}
                     hasFeedback
                 >
                     <Input type="password"
@@ -58,7 +66,11 @@ export default function ModifyPwd(props) {
                     name="newPassword2"
                     dependencies={['newPassword']}
                     hasFeedback
-                    rules={[{ required: true, message: lag.alertRequirePwd },
+                    rules={[{
+                        required: true,
+                        pattern: /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}/,
+                        message: lag.alertRequirePwd
+                    },
                     ({ getFieldValue }) => ({
                         validator(rule, value) {
                             if (value && value.length < 8) {

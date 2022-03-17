@@ -2,7 +2,7 @@ export const zh_cn = {
     loginByAccount: '账号登陆',
     loginByScan: '扫码登陆',
     alertRequireUsername: "请填写正确的用户名",
-    alertRequirePwd: "请填写密码",
+    alertRequirePwd: "请填写正确的密码",
     errorUsernameOrPassword: "用户名或密码错误",
     login: "登陆",
     callAdmin: '联系管理员',
