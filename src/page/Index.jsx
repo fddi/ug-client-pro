@@ -3,42 +3,29 @@ import {
     Navigate
 } from 'react-router-dom';
 import { Layout, Spin, } from 'antd';
-import { APPNMAE, TAG } from '../config/client'
+import { useRequest } from 'ahooks';
+import { APPNMAE, post } from '../config/client'
 import StringUtils from '../util/StringUtils'
 import MenuTree from '../components/index/MenuTree'
 import MainHeader from '../components/index/MainHeader'
 import logo from '../asset/icon.png'
 import TabFragment from '../components/index/TabFragment';
-import FetchTo from '../util/FetchTo';
 const { Header, Content, Sider } = Layout
 export default function Index(props) {
     const [jump, setJump] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
-    const [menuTree, setMenuTree] = useState();
     const [activeMenu, setActiveMenu] = useState();
 
-    useEffect(() => {
-        setLoading(true)
-        FetchTo(fetch('data/menu.json', {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json',
-            }
-        }), 120000).then(response => response.json())
-            .then(result => {
-                if (result && result.resultCode === 200) {
-                    const menu1 = result.resultData.children;
-                    let menu2 = [];
-                    if (!StringUtils.isEmpty(menu1) && menu1.length > 0) {
-                        menu2 = menu1[0].children;
-                    }
-                    setMenuTree({ top: menu1, left: menu2 })
-                    setLoading(false)
-                }
-            })
-    }, []);
+    const { data, loading } = useRequest(post('data/menu.json'),{loadingDelay: 1000});
+    let menuTree;
+    if (data && data.resultCode === 200) {
+        const menu1 = data.resultData.children;
+        let menu2 = [];
+        if (!StringUtils.isEmpty(menu1) && menu1.length > 0) {
+            menu2 = menu1[0].children;
+        }
+        menuTree = { top: menu1, left: menu2 };
+    }
 
     function handleMenuClick(e) {
         let tree = menuTree;
