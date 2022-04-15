@@ -5,7 +5,7 @@ import Loadable from 'react-loadable'
 import Workbench from '../../page/WorkBench'
 import TabProvider from './TabProvider';
 import StringUtils from '../../util/StringUtils';
-import RoutesIndex from '../../router/RoutesIndex';
+import RoutesIndex from '../../router/RouteIndex';
 import Redirect404 from '../../page/404';
 import Hold from '../../page/Hold';
 

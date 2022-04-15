@@ -9,6 +9,13 @@ export const TAG = {
     userName: APPID + "-userName",
     menu: "Menu",
 };
+export function getAuthInfo() {
+    let tokenInfo = sessionStorage.getItem(TAG.token);
+    if (tokenInfo === null || tokenInfo === "")
+        return {};
+    tokenInfo = JSON.parse(tokenInfo);
+    return tokenInfo;
+}
 const timeout = 30000;
 export function post(url, param, isSign = true) {
     const regx = /\.json$/;
@@ -24,6 +31,7 @@ export function post(url, param, isSign = true) {
                 body: formData,
                 headers: {
                     'Accept': 'application/json',
+                    'token': getAuthInfo().token || ''
                 }
             }
         ).then(response => response.json()), timeout)
@@ -43,6 +51,7 @@ export function post(url, param, isSign = true) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': contentType,
+            'token': getAuthInfo().token || ''
         }, body: bodyStr,
     }), timeout).then((response) => response.json())
 }
@@ -54,6 +63,7 @@ export function get(url, param) {
         mode: 'cors',
         headers: {
             'Accept': 'application/json',
+            'token': getAuthInfo().token || ''
         }
     }), timeout)
         .then((response) => response.json())
