@@ -20,15 +20,14 @@ const timeout = 30000;
 export async function post(url, param, isSign = true) {
     const regx = /\.json$/;
     if (regx.test(url)) {
-        get(url, param)
-        return
+        return get(url, param)
     }
     if (param && param instanceof FormData && isSign === false) {
         return fetchTo(fetch(url,
             {
                 method: 'POST',
                 mode: 'cors',
-                body: formData,
+                body: param,
                 headers: {
                     'Accept': 'application/json',
                     'token': getAuthInfo().token || ''

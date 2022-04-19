@@ -12,19 +12,19 @@
                         "key": 111,
                         "title": "远程调用",
                         "value": "",
-                        "icon": "bars",
+                        "icon": "BarsOutlined",
                         "children": [
                             {
                                 "key": 1111,
                                 "title": "iframe调用",
                                 "value": "/index/dll",
-                                "icon": "bars"
+                                "icon": "BarsOutlined"
                             },
                             {
                                 "key": 1113,
                                 "title": "微服务调用",
                                 "value": "/index/activex",
-                                "icon": "bars"
+                                "icon": "BarsOutlined"
                             }
                         ]
                     }
@@ -32,7 +32,7 @@
                 "key": 11,
                 "title": "调用示例",
                 "value": "",
-                "icon": "bars"
+                "icon": "BarsOutlined"
             },
             {
                 "children": [
@@ -40,19 +40,19 @@
                         "key": 121,
                         "title": "404页面",
                         "value": "/index/404",
-                        "icon": "bars"
+                        "icon": "BarsOutlined"
                     },
                     {
                         "key": 122,
                         "title": "加载等待页面",
                         "value": "/index/hold",
-                        "icon": "bars"
+                        "icon": "BarsOutlined"
                     }
                 ],
                 "key": 12,
                 "title": "插件示例",
                 "value": "",
-                "icon": "bars"
+                "icon": "BarsOutlined"
             }
         ]
     },

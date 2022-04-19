@@ -2,10 +2,10 @@ import './style/app.less';
 import {
   BrowserRouter, Route, Routes
 } from 'react-router-dom';
-import asyncComponent from "./util/AsyncComponent";
+import LoadPage from "./util/LoadPage";
 
-const Login = asyncComponent(() => import('./page/Login'));
-const Index = asyncComponent(() => import('./page/Index'));
+const Login = LoadPage(() => import('./page/Login'));
+const Index = LoadPage(() => import('./page/Index'));
 function App() {
   return (
     <BrowserRouter>

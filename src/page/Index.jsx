@@ -17,6 +17,7 @@ export default function Index(props) {
     const [activeMenu, setActiveMenu] = useState();
 
     const { data, loading } = useRequest(() => post('data/menu.json'), { loadingDelay: 1000 });
+    console.log(data)
     let menuTree;
     if (data && data.resultCode === 200) {
         const menu1 = data.resultData.children;
@@ -33,7 +34,6 @@ export default function Index(props) {
             for (let i = 0; i < menuTree.top.length; i++) {
                 if (e.key === "menu-top-" + menuTree.top[i].key) {
                     tree.left = menuTree.top[i].children;
-                    setMenuTree(tree)
                     break;
                 }
             }

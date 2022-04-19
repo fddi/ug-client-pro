@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Badge, Col, Menu, Modal, Progress, Row, } from 'antd';
-import { UserOutlined, PoweroffOutlined, MessageOutlined, RollbackOutlined, } from '@ant-design/icons'
-import { lag } from '../../config/lag'
+import { Badge, Col, Menu, Row, } from 'antd';
+import { UserOutlined, PoweroffOutlined, MessageOutlined, } from '@ant-design/icons'
 import StringUtils from '../../util/StringUtils';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +14,7 @@ export default function HeaderView(props) {
                let sk = ["menu-top-" + props.menus[0].key];
                setSelectedKeys(sk);
           }
-     }, [])
+     }, [props.menus])
 
      function handleMenuClick(e) {
           switch (parseInt(e.key)) {
@@ -56,7 +55,7 @@ export default function HeaderView(props) {
      }
 
      function getItem(menu) {
-          if (menu.type == "5") {
+          if (menu.type === "5") {
                return;
           }
           return (<Menu.Item key={"menu-top-" + menu.key} menu={menu}>{menu.title}</Menu.Item>);

@@ -14,6 +14,26 @@ export default function TabFragment(props) {
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
 
+    function addTabPage(menu) {
+        let geted = false;
+        if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
+            return
+        }
+        for (var i = 0; i < pages.length; i++) {
+            if (menu.key === pages[i].key) {
+                geted = true;
+                break;
+            }
+        }
+        if (geted) {
+            setActiveKey("tab-main-" + menu.key)
+            return;
+        }
+        pages.push(menu);
+        setPages(pages)
+        setActiveKey("tab-main-" + menu.key)
+    }
+    
     useEffect(() => {
         addTabPage(props.activeMenu)
     }, [props.activeMenu]);
@@ -41,27 +61,6 @@ export default function TabFragment(props) {
     const clearTabs = () => {
         setPages([]);
         setActiveKey("tab-main-default")
-    }
-
-
-    const addTabPage = (menu) => {
-        let geted = false;
-        if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
-            return
-        }
-        for (var i = 0; i < pages.length; i++) {
-            if (menu.key === pages[i].key) {
-                geted = true;
-                break;
-            }
-        }
-        if (geted) {
-            setActiveKey("tab-main-" + menu.key)
-            return;
-        }
-        pages.push(menu);
-        setPages(pages)
-        setActiveKey("tab-main-" + menu.key)
     }
 
     const removeTabPage = (menu) => {

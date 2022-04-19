@@ -17,7 +17,7 @@ export default function MenuTree(props) {
      }
 
      function getNode(menu) {
-          if (menu.type == "5") {
+          if (menu.type === "5") {
                return;
           }
           let menuTree = menu.children;
