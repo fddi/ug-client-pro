@@ -5,7 +5,7 @@ import { post } from "../../config/client";
 
 export default (props) => {
     const [value, setValue] = useState(props.value || '');
-    const { data, loading, run, cancel } = useRequest(post('data/dict-list.json',
+    const { data, loading, run, cancel } = useRequest(() => post('data/dict-list.json',
         { catalog: props.catalog, dictCode: props.dictCode }),
         { loadingDelay: 1000, manual: true });
     useEffect(() => {

@@ -5,8 +5,8 @@ import { useRequest, useUpdateEffect } from 'ahooks';
 
 export default (props) => {
     const [tags, setTags] = useState(props.selectTags || []);
-    const { data, loading, run, cancel } = useRequest(post('data/dict-list.json',
-        { catalog: props.catalog, dictCode: props.dictCode }),
+    const { data, loading, run, cancel } = useRequest(() => post('data/dict-list.json',
+    { catalog: props.catalog, dictCode: props.dictCode }),
         { loadingDelay: 1000, manual: true });
     useEffect(() => {
         loading && cancel();

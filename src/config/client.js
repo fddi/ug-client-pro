@@ -17,13 +17,13 @@ export function getAuthInfo() {
     return tokenInfo;
 }
 const timeout = 30000;
-export function post(url, param, isSign = true) {
+export async function post(url, param, isSign = true) {
     const regx = /\.json$/;
     if (regx.test(url)) {
         get(url, param)
         return
     }
-    if (param && param instanceof FormData) {
+    if (param && param instanceof FormData && isSign === false) {
         return fetchTo(fetch(url,
             {
                 method: 'POST',
@@ -45,7 +45,7 @@ export function post(url, param, isSign = true) {
         bodyStr = paramStr + "&sign=" + signData(objToParamsStr(param), appKey);
         contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
     }
-    return fetchTo(fetch(url, {
+    const response_1 = await fetchTo(fetch(url, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -53,10 +53,11 @@ export function post(url, param, isSign = true) {
             'Content-Type': contentType,
             'token': getAuthInfo().token || ''
         }, body: bodyStr,
-    }), timeout).then((response) => response.json())
+    }), timeout);
+    return response_1.json();
 }
 
-export function get(url, param) {
+export async function get(url, param) {
     url = url + "?" + objToParamsStr(param);
     return fetchTo(fetch(url, {
         method: 'GET',

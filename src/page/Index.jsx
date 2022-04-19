@@ -16,7 +16,7 @@ export default function Index(props) {
     const [collapsed, setCollapsed] = useState(false);
     const [activeMenu, setActiveMenu] = useState();
 
-    const { data, loading } = useRequest(post('data/menu.json'),{loadingDelay: 1000});
+    const { data, loading } = useRequest(() => post('data/menu.json'), { loadingDelay: 1000 });
     let menuTree;
     if (data && data.resultCode === 200) {
         const menu1 = data.resultData.children;
