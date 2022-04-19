@@ -10,7 +10,7 @@ export default function HeaderView(props) {
      const [selectedKeys, setSelectedKeys] = useState([]);
 
      useEffect(() => {
-          if (props.menus && props.menus.length > 0) {
+          if (props.menus && props.menus.length > 0 && selectedKeys.length == 0) {
                let sk = ["menu-top-" + props.menus[0].key];
                setSelectedKeys(sk);
           }
@@ -58,9 +58,8 @@ export default function HeaderView(props) {
           if (menu.type === "5") {
                return;
           }
-          return (<Menu.Item key={"menu-top-" + menu.key} menu={menu}>{menu.title}</Menu.Item>);
+          return (<Menu.Item key={"menu-top-" + menu.key}>{menu.title}</Menu.Item>);
      }
-
      return (
           <Row>
                <Col flex="auto">

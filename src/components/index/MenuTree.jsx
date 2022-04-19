@@ -22,7 +22,7 @@ export default function MenuTree(props) {
           }
           let menuTree = menu.children;
           if (StringUtils.isEmpty(menuTree) || menuTree.length === 0) {
-               return (<Menu.Item key={"menu-tree-" + menu.key} menu={menu}>
+               return (<Menu.Item key={"menu-tree-" + menu.key} >
                     <Icon type={menu.icon} />
                     <span className="nav-text">{menu.title}</span>
                </Menu.Item>);

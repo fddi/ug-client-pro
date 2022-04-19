@@ -7,6 +7,7 @@ module.exports = {
             options: {
                 lessLoaderOptions: {
                     lessOptions: {
+                        compact: true,
                         modifyVars: themes,
                         javascriptEnabled: true,
                     },
