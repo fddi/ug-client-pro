@@ -47,7 +47,13 @@ export default function Index(props) {
     const [activeMenu, setActiveMenu] = useState();
 
     const { data, loading, run } = useRequest(queryData, { loadingDelay: 1000, manual: true });
-    useEffect(() => run(), [])
+    useEffect(() => {
+        run();
+        return () => {
+            menuTree = null;
+            menuList = []
+        }
+    }, [])
     function handleMenuClick(e) {
         if (e.key.indexOf("menu-top-") >= 0) {
             run(true, e.key);

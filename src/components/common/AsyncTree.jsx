@@ -62,6 +62,10 @@ export default (props) => {
     useEffect(() => {
         loading && cancel();
         run(modules, params);
+        return () => {
+            dataList = []
+            allRoot = null;
+        }
     }, [params, refreshTime])
 
     const handleSelect = (keys, e) => {
