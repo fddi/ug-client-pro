@@ -10,7 +10,7 @@ export default function HeaderView(props) {
      const [selectedKeys, setSelectedKeys] = useState([]);
 
      useEffect(() => {
-          if (props.menus && props.menus.length > 0 && selectedKeys.length == 0) {
+          if (props.menus && props.menus.length > 0) {
                let sk = ["menu-top-" + props.menus[0].key];
                setSelectedKeys(sk);
           }

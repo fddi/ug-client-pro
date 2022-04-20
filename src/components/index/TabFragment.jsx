@@ -11,10 +11,15 @@ import Hold from '../../page/Hold';
 
 const TabPane = Tabs.TabPane;
 export default function TabFragment(props) {
+    const [menu, setMenu] = useState();
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
 
     function addTabPage(menu) {
+        setMenu(menu)
+    }
+
+    useEffect(() => {
         let geted = false;
         if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
             return
@@ -32,10 +37,10 @@ export default function TabFragment(props) {
         pages.push(menu);
         setPages(pages)
         setActiveKey("tab-main-" + menu.key)
-    }
-    
+    }, [menu])
+
     useEffect(() => {
-        addTabPage(props.activeMenu)
+        setMenu(props.activeMenu)
     }, [props.activeMenu]);
 
     const onTabEdit = (targetKey, action) => {
