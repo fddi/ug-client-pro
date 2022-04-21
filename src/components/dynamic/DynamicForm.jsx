@@ -252,15 +252,15 @@ export default (props) => {
         }
         adding = true;
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
-        const item = {};
-        item['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
-        item['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
-        if (!StringUtils.isEmpty(modules.tag)) {
-            const key = StringUtils.isEmpty(modules.tag.key) ? "key" : modules.tag.key;
-            const tagKey = StringUtils.isEmpty(modules.tag.tagKey) ? key : modules.tag.tagKey;
-            item[tagKey] = item[tagKey];
+        const initItem = {};
+        initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
+        initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
+        if (!StringUtils.isEmpty(modules.extra)) {
+            const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
+            const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
+            initItem[dataIndex] = item[dataIndex];
         }
-        reset(item);
+        reset(initItem);
     }
 
     const handleDel = () => {
@@ -281,7 +281,7 @@ export default (props) => {
         params[rowKey] = key;
         Modal.confirm({
             title: lag.confirmDel,
-            content: lag.delTag,
+            content: lag.del,
             okText: lag.ok,
             okType: 'danger',
             cancelText: lag.cancel,

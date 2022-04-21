@@ -39,7 +39,7 @@ export default (props) => {
     const [keys, setKeys] = useState([]);
     const [form] = Form.useForm();
     const { modules } = props;
-    const { tableProps, search, params } = useAntdTable((obj, formData) => queryData(obj, formData, props.params, modules), {
+    const { tableProps, search } = useAntdTable((obj, formData) => queryData(obj, formData, props.params, modules), {
         defaultPageSize: 20,
         form,
     });

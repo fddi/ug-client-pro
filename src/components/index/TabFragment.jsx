@@ -8,24 +8,24 @@ import StringUtils from '../../util/StringUtils';
 import RoutesIndex from '../../router/RouteIndex';
 import Redirect404 from '../../page/404';
 import Hold from '../../page/Hold';
-
+let localPages = [];
 const TabPane = Tabs.TabPane;
 export default function TabFragment(props) {
-    const [menu, setMenu] = useState();
+    const [menu, addMenu] = useState();
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
 
-    function addTabPage(menu) {
-        setMenu(menu)
-    }
+    useEffect(() => {
+        addMenu(props.activeMenu)
+    }, [props.activeMenu]);
 
     useEffect(() => {
         let geted = false;
         if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
             return
         }
-        for (var i = 0; i < pages.length; i++) {
-            if (menu.key === pages[i].key) {
+        for (var i = 0; i < localPages.length; i++) {
+            if (menu.key === localPages[i].key) {
                 geted = true;
                 break;
             }
@@ -34,14 +34,14 @@ export default function TabFragment(props) {
             setActiveKey("tab-main-" + menu.key)
             return;
         }
-        pages.push(menu);
-        setPages(pages)
+        localPages.push(menu);
+        setPages(localPages)
         setActiveKey("tab-main-" + menu.key)
     }, [menu])
 
-    useEffect(() => {
-        setMenu(props.activeMenu)
-    }, [props.activeMenu]);
+    function addTabPage(menu) {
+        addMenu(menu)
+    }
 
     const onTabEdit = (targetKey, action) => {
         if (action !== "remove") {
@@ -49,7 +49,7 @@ export default function TabFragment(props) {
         }
         let newPages = [];
         let preIndex = 0;
-        pages.forEach((item, index) => {
+        localPages.forEach((item, index) => {
             if (targetKey == ("tab-main-" + item.key)) {
                 preIndex = index - 1;
             }
@@ -57,13 +57,15 @@ export default function TabFragment(props) {
                 newPages.push(item);
             }
         });
-        const preActiveKey = preIndex >= 0 ? `tab-main-${pages[preIndex].key}` : "tab-main-default";
+        const preActiveKey = preIndex >= 0 ? `tab-main-${localPages[preIndex].key}` : "tab-main-default";
         let key = activeKey === targetKey ? preActiveKey : activeKey
-        setPages(newPages)
+        localPages = newPages;
+        setPages(localPages)
         setActiveKey(key)
     }
 
     const clearTabs = () => {
+        localPages = [];
         setPages([]);
         setActiveKey("tab-main-default")
     }
