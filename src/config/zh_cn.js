@@ -25,4 +25,5 @@ export const zh_cn = {
     error404: '内容走丢了！',
     confirmDel: '确认删除数据？',
     del: '删除',
+    confirmClearTabs: '是否清理所有选项卡窗口？',
 };

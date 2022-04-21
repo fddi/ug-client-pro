@@ -5,10 +5,10 @@ import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
-export default (props) => {
+export default function AsyncSelect(props) {
     const [value, setValue] = useState(props.value || '');
     const { data, loading, run, cancel } = useRequest(() => post('data/dict-list.json',
-    { catalog: props.catalog, dictCode: props.dictCode }),
+        { catalog: props.catalog, dictCode: props.dictCode }),
         { loadingDelay: 1000, manual: true });
     useEffect(() => {
         if (props.catalog !== "icon" && props.catalog !== "TF") {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, Popconfirm } from 'antd';
 import { ClearOutlined } from '@ant-design/icons'
 import Loadable from 'react-loadable'
 import Workbench from '../../page/WorkBench'
@@ -8,12 +8,14 @@ import StringUtils from '../../util/StringUtils';
 import RoutesIndex from '../../router/RouteIndex';
 import Redirect404 from '../../page/404';
 import Hold from '../../page/Hold';
+import { lag } from '../../config/lag'
 let localPages = [];
 const TabPane = Tabs.TabPane;
 export default function TabFragment(props) {
     const [menu, addMenu] = useState();
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
+    const [popVisible, setPopVisible] = useState(false);
 
     useEffect(() => {
         addMenu(props.activeMenu)
@@ -68,6 +70,7 @@ export default function TabFragment(props) {
         localPages = [];
         setPages([]);
         setActiveKey("tab-main-default")
+        setPopVisible(false)
     }
 
     const removeTabPage = (menu) => {
@@ -135,8 +138,18 @@ export default function TabFragment(props) {
             activeKey={activeKey}
             tabBarStyle={{ margin: 0 }}
             className="tabs-page"
-            tabBarExtraContent={<Button type='link' icon={<ClearOutlined />}
-                onClick={clearTabs} style={{ marginRight: 12, }} />}
+            tabBarExtraContent={
+                <Popconfirm
+                    placement="left"
+                    title={lag.confirmClearTabs}
+                    visible={popVisible}
+                    onConfirm={clearTabs}
+                    onCancel={() => setPopVisible(false)}
+                >
+                    <Button type='link' icon={<ClearOutlined />}
+                        onClick={() => setPopVisible(true)} style={{ marginRight: 12, }} />
+                </Popconfirm>
+            }
         >
             <TabPane tab={(<span style={{ userSelect: 'none', }}>工作台</span>)}
                 key="tab-main-default" closable={false}

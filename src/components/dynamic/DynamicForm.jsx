@@ -5,7 +5,7 @@ import moment from 'moment';
 import { post } from "../../config/client";
 import { lag } from "../../config/lag";
 import { jsonToFormData } from "../../util/FetchTo";
-import StringUtils from '../../utils/StringUtils';
+import StringUtils from '../../util/StringUtils';
 import DynamicItem from './DynamicItem';
 import { useRequest } from 'ahooks';
 import ReactJson from 'react-json-view';
@@ -33,7 +33,7 @@ export default (props) => {
     useEffect(() => {
         const { modules } = props;
         !StringUtils.isEmpty(modules) && initState(modules)
-    }, [modules]);
+    }, [props.modules]);
     //选中项变更
     useEffect(() => {
         const { modules, row } = props;
@@ -185,7 +185,7 @@ export default (props) => {
         setJson(newJson)
         const data = form.current.getFieldsValue();
         data[json.jsonIndex] = JSON.stringify(obj.updated_src)
-        from.current.setFieldsValue(data);
+        form.current.setFieldsValue(data);
     }
 
     const onFinish = () => {
@@ -205,7 +205,7 @@ export default (props) => {
                 //logo上传
                 if (logo && logo.logoIndex) {
                     if (logo.logoFile) {
-                        formData.append(logo.logoFileIndex, logoFile)
+                        formData.append(logo.logoFileIndex, logo.logoFile)
                     }
                     if (item && !StringUtils.isEmpty(item[logo.logoIndex])) {
                         formData.append(logo.logoIndex, item[logo.logoIndex])
@@ -277,7 +277,6 @@ export default (props) => {
             return;
         }
         const params = {};
-        params.token = token;
         params[rowKey] = key;
         Modal.confirm({
             title: lag.confirmDel,
@@ -336,7 +335,7 @@ export default (props) => {
             </Dropdown>
         </Space>);
     return (
-        <div style={style}>
+        <div style={props.style}>
             <Spin spinning={spinning || loading}>
                 <Card
                     bodyStyle={{ padding: 6, }}

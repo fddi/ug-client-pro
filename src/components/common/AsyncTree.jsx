@@ -39,8 +39,8 @@ async function queryData(modules, params, localSearch = false, v) {
     } else {
         return post(modules.queryApi, { parentKey: 0, ...params }).then((result) => {
             if (result && 200 === result.resultCode) {
-                const root = data.resultData;
-                allRoot = data.resultData;
+                const root = result.resultData;
+                allRoot = result.resultData;
                 ArrayUtils.treeToArray(root, dataList);
                 return root;
             } else {

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, } from 'antd';
 import { MenuOutlined, } from '@ant-design/icons';
 import { post } from "../../config/client";
 import StringUtils from '../../util/StringUtils';
+import { useRequest } from 'ahooks';
 
 async function queryData(modules, params) {
     return post(modules.queryApi, { parentKey: 0, ...params }).then((result) => {
         if (result && 200 === result.resultCode) {
-            data.resultData && (data.resultData[0].selected = true);
-            return data.resultData;
+            result.resultData && (result.resultData[0].selected = true);
+            return result.resultData;
         } else {
             return null;
         }
@@ -18,10 +19,10 @@ async function queryData(modules, params) {
 /**
  * 数据菜单控件
  * **/
-export default (props) => {
+export default function AsyncMenu(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const { modules, params, refreshTime, handleClick } = props;
-    const { data, loading, run, cancel } = useRequest(() => queryData(modules, params),
+    const { data, loading, run, cancel } = useRequest(queryData,
         { loadingDelay: 1000, manual: true });
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default (props) => {
     }, [params, refreshTime])
 
     const key = StringUtils.isEmpty(modules.key) ? "key" : modules.key;
-    if (data && data[0].selected == true) {
+    if (data && data[0].selected === true) {
         setSelectedKeys(["menu-tag-" + data[0][key]])
         handleClick && handleClick(data[0])
     }

@@ -12,7 +12,7 @@ export default function UploadCover(props) {
           setData(props.url)
      }, [props.url])
 
-     beforeUpload = async (file) => {
+     const beforeUpload = async (file) => {
           const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
           if (!isJpgOrPng) {
                message.error(lag.alertImgType);
@@ -30,7 +30,7 @@ export default function UploadCover(props) {
           return false;
      }
 
-     onFileDelete = () => {
+     const onFileDelete = () => {
           setFile(null);
           setData(null);
      }

@@ -55,6 +55,7 @@ export default (props) => {
         props.onFinish && props.onFinish();
     }
 
+    const { modules } = props;
     let spanForm = 13;
     if (StringUtils.isEmpty(modules.extra)) {
         spanForm += 5;
@@ -119,7 +120,7 @@ export default (props) => {
                     return <Fragment key={`action-${index}`}>{Com}</Fragment>
                 })}
             </Space>
-            <Row gutter={[8, 8]} style={{ flex: '1', height: '76vh', ...style }}>
+            <Row gutter={[8, 8]} style={{ flex: '1', height: '76vh', ...props.style }}>
                 {Extra}
                 {TreeData}
                 <Col span={spanForm} style={{ overflowY: "auto" }}>

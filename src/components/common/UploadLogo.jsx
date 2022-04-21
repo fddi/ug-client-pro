@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Upload, message, } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
 import { getFileByBase64 } from '../../util/FileUtils';
@@ -12,7 +12,7 @@ export default function UploadLogo(props) {
           setData(props.url)
      }, [props.url])
 
-     beforeUpload = async (file) => {
+     const beforeUpload = async (file) => {
           const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
           if (!isJpgOrPng) {
                message.error(lag.alertImgType);

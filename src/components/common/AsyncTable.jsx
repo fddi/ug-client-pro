@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Input, Avatar, Form } from 'antd';
 import StringUtils from '../../util/StringUtils';
-import { post } from "../../config/client";
+import { post, getImgUrl } from "../../config/client";
 import { useAntdTable, useUpdateEffect } from 'ahooks';
 async function queryData({ current, pageSize }, formData, params, modules) {
     const addParams = {
@@ -24,7 +24,9 @@ function filterCols(columns) {
     columns.forEach(item => {
         if ('hidden' !== item.inputType && 'hidden' !== item.colsType) {
             if (item.inputType === "logo") {
-                item.render = (text, record) => { return text ? (<Avatar size={40} src={Auth.getImgUrl(text)} />) : null };
+                item.render = (text, record) => {
+                    return text ? (<Avatar size={40} src={getImgUrl(text)} />) : null
+                };
             }
             cols.push(item)
         }
@@ -79,7 +81,7 @@ export default (props) => {
             }}
             bordered
             title={header}
-            scroll={{ y: 420, scrollToFirstRowOnChange: true, ...scroll }}
+            scroll={{ y: 420, scrollToFirstRowOnChange: true, ...props.scroll }}
             rowSelection={{
                 columnWidth: 30,
                 type: modules.selectType || 'radio',

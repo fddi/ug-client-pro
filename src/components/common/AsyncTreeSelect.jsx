@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TreeSelect, } from 'antd';
 import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
+import { useRequest, useUpdateEffect } from 'ahooks';
 
 export default (props) => {
     const [value, setValue] = useState(props.value || '');
