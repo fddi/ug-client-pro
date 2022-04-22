@@ -37,7 +37,7 @@ function filterCols(columns) {
 /**
  * 数据展示 表格控件
  * **/
-export default (props) => {
+export default function AsyncTable(props) {
     const [keys, setKeys] = useState([]);
     const [form] = Form.useForm();
     const { modules } = props;

@@ -10,7 +10,7 @@ import AsyncMenu from '../common/AsyncMenu';
  * 动态CURD界面
  * 
  * **/
-export default (props) => {
+export default function DynamicCurd(props) {
     const [params, setParams] = useState(props.params);
     const [extraValue, setExtraValue] = useState();
     const [row, setRow] = useState();

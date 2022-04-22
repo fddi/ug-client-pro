@@ -26,7 +26,7 @@ async function queryData(modules, row) {
 /**
  * 动态表单组件
  * **/
-export default (props) => {
+export default function DynamicForm(props) {
     const [form] = Form.useForm();
     const [spinning, setSpinning] = useState(false);
     const [item, setItem] = useState();

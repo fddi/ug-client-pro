@@ -7,6 +7,7 @@ export default {
         { path: '/index/workbench', component: 'Workbench' },
         { path: '/index/404', component: '404' },
         { path: '/index/hold', component: 'Hold' },
-        { path: '/index/curd-mapper', component: 'CurdMapper' },
+        { path: '/index/remote-if', component: 'RemoteIframe' },
+        { path: '/index/remote-mirco', component: 'RemoteMirco' },
     ]
 }

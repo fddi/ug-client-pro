@@ -7,7 +7,7 @@ function queryData(catalog, dictCode) {
     return post('data/dict-list.json', { catalog, dictCode })
 }
 
-export default (props) => {
+export default function AsyncTag(props) {
     const [tags, setTags] = useState(props.selectTags || []);
     const { data } = useRequest(() => queryData(props.catalog, props.dictCode),
         {

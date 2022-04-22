@@ -51,7 +51,7 @@ async function queryData(modules, params, localSearch = false, v) {
 /**
  * 数据展示 树形控件
  * **/
-export default (props) => {
+export default function AsyncTree(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [expandedKeys, setExpandedKeys] = useState([]);
     const { modules, params, refreshTime } = props;
