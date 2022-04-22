@@ -32,9 +32,7 @@ function searchTree(value) {
 async function queryData(modules, params, localSearch = false, v) {
     if (localSearch) {
         return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(searchTree(v));
-            }, 1000);
+            resolve(searchTree(v));
         });
     } else {
         return post(modules.queryApi, { parentKey: 0, ...params }).then((result) => {
@@ -57,16 +55,11 @@ export default (props) => {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [expandedKeys, setExpandedKeys] = useState([]);
     const { modules, params, refreshTime } = props;
-    const { data, loading, run, cancel } = useRequest(() => queryData(modules, params),
-        { loadingDelay: 1000, manual: true });
-    useEffect(() => {
-        loading && cancel();
-        run(modules, params);
-        return () => {
-            dataList = []
-            allRoot = null;
-        }
-    }, [params, refreshTime])
+    const { data, run, } = useRequest((localSearch = false, v) => queryData(modules, params, localSearch, v),
+        {
+            loadingDelay: 1000,
+            refreshDeps: [params, refreshTime],
+        });
 
     const handleSelect = (keys, e) => {
         const { handleSelect } = props;
@@ -84,7 +77,7 @@ export default (props) => {
     const onChange = e => {
         setSelectedKeys([]); setExpandedKeys([]);
         const { value } = e.target;
-        run(modules, params, true, value);
+        run(true, value);
     };
 
     const onDrop = info => {

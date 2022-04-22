@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tag, } from 'antd';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
+function queryData(catalog, dictCode) {
+    return post('data/dict-list.json', { catalog, dictCode })
+}
+
 export default (props) => {
     const [tags, setTags] = useState(props.selectTags || []);
-    const { data, loading, run, cancel } = useRequest(() => post('data/dict-list.json',
-    { catalog: props.catalog, dictCode: props.dictCode }),
-        { loadingDelay: 1000, manual: true });
-    useEffect(() => {
-        loading && cancel();
-        run();
-    }, [props.catalog, props.dictCode])
+    const { data } = useRequest(() => queryData(props.catalog, props.dictCode),
+        {
+            loadingDelay: 1000,
+            refreshDeps: [props.catalog, props.dictCode]
+        });
     useUpdateEffect(() => {
         setTags(selectTags)
     }, [props.selectTags])

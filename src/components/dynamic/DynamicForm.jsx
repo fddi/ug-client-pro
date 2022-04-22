@@ -12,11 +12,16 @@ import ReactJson from 'react-json-view';
 const FormItem = Form.Item;
 let adding = false;
 
-async function queryData(modules, key, v) {
-    const param = {
+async function queryData(modules, row) {
+    adding = false;
+    const rowkey = modules.rowKey || modules.columns[0].dataIndex;
+    const v = row[rowkey] || row['key'];
+    if (!StringUtils.isEmpty(modules.queryApi) && !StringUtils.isEmpty(v)) {
+        return post(modules.queryApi, param).then((result) => result.resultData);
     }
-    param[key] = v;
-    return post(modules.queryApi, param).then((result) => result.resultData);
+    return new Promise((resolve) => {
+        resolve(null);
+    });
 }
 /**
  * 动态表单组件
@@ -28,23 +33,18 @@ export default (props) => {
     const [json, setJson] = useState();
     const [logo, setLogo] = useState();
     const [cover, setCover] = useState();
-    const { data, loading, run } = useRequest(queryData,
-        { loadingDelay: 1000, manual: true });
+    const { data, loading } = useRequest(() => queryData(props.modules, props.row),
+        {
+            loadingDelay: 1000,
+            refreshDeps: [props.row]
+        });
     useEffect(() => {
         const { modules } = props;
         !StringUtils.isEmpty(modules) && initState(modules)
     }, [props.modules]);
     //选中项变更
     useEffect(() => {
-        const { modules, row } = props;
-        adding = false;
-        const rowkey = modules.rowKey || modules.columns[0].dataIndex;
-        const v = row[rowkey] || row['key'];
-        if (!StringUtils.isEmpty(modules.queryApi) && !StringUtils.isEmpty(v)) {
-            run(modules, rowkey, v);
-        } else {
-            reset(row);
-        }
+        reset(props.row);
     }, [props.row]);
     //返回值变更
     useEffect(() => {

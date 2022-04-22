@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu, } from 'antd';
 import { MenuOutlined, } from '@ant-design/icons';
 import { post } from "../../config/client";
@@ -22,13 +22,11 @@ async function queryData(modules, params) {
 export default function AsyncMenu(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const { modules, params, refreshTime, handleClick } = props;
-    const { data, loading, run, cancel } = useRequest(queryData,
-        { loadingDelay: 1000, manual: true });
-
-    useEffect(() => {
-        loading && cancel();
-        run(modules, params);
-    }, [params, refreshTime])
+    const { data } = useRequest(() => queryData(modules, params),
+        {
+            loadingDelay: 1000,
+            refreshDeps: [params, refreshTime]
+        });
 
     const key = StringUtils.isEmpty(modules.key) ? "key" : modules.key;
     if (data && data[0].selected === true) {

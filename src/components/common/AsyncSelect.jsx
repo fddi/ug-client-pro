@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Select, } from 'antd';
 import { icons, } from '../common/PreIcon';
 import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
+function queryData(catalog, dictCode) {
+    if (catalog === "icon" && catalog === "TF") {
+        return new Promise((resolve) => {
+            resolve(null);
+        });
+    }
+    return post('data/dict-list.json', { catalog, dictCode })
+}
+
 export default function AsyncSelect(props) {
     const [value, setValue] = useState(props.value || '');
-    const { data, loading, run, cancel } = useRequest(() => post('data/dict-list.json',
-        { catalog: props.catalog, dictCode: props.dictCode }),
-        { loadingDelay: 1000, manual: true });
-    useEffect(() => {
-        if (props.catalog !== "icon" && props.catalog !== "TF") {
-            loading && cancel();
-            run();
-        }
-    }, [props.catalog, props.dictCode])
+    const { data } = useRequest(() => queryData(props.catalog, props.dictCode),
+        {
+            loadingDelay: 1000,
+            refreshDeps: [props.catalog, props.dictCode]
+        });
     useUpdateEffect(() => {
         setValue(props.value)
     }, [props.value])
