@@ -1,0 +1,98 @@
+{
+    "resultCode": 200,
+    "resultData": {
+        "formMapper": {
+            "title": "机构管理",
+            "extra": {
+                "type": "menu",
+                "queryApi": "data/dict.json",
+                "key": "dictCode",
+                "dataIndex": "dictCode",
+                "title": "地区"
+            },
+            "dataType": "table",
+            "rowKey": "id",
+            "searchKey": "name",
+            "saveApi": "data/success.json",
+            "delApi": "data/success.json",
+            "findApi": "data/success.json",
+            "queryApi": "",
+            "dragDropApi": "",
+            "params": {
+                "parentId": 0
+            },
+            "columns": [
+                {
+                    "title": "机构ID",
+                    "dataIndex": "id",
+                    "inputType": "hidden",
+                    "required": true
+                },
+                {
+                    "title": "机构名称",
+                    "dataIndex": "name",
+                    "inputType": "text",
+                    "required": true,
+                    "message": "请填入名称"
+                },
+                {
+                    "title": "机构代码",
+                    "dataIndex": "code",
+                    "inputType": "text",
+                    "pattern": "^[A-Za-z0-9]{4,16}",
+                    "required": true,
+                    "message": "4-16位字母或数字开头的机构代码",
+                    "updateDisabled": true,
+                    "width": 120
+                },
+                {
+                    "title": "机构类型",
+                    "dataIndex": "type",
+                    "inputType": "select",
+                    "catalog": "org_type"
+                },
+                {
+                    "title": "是否启用",
+                    "dataIndex": "status",
+                    "inputType": "select",
+                    "catalog": "TF"
+                },
+                {
+                    "title": "父级机构",
+                    "dataIndex": "type",
+                    "inputType": "treeSelect",
+                    "catalog": "porg"
+                },
+                {
+                    "title": "机构排序",
+                    "dataIndex": "sort",
+                    "inputType": "number"
+                },
+                {
+                    "title": "成立时间",
+                    "dataIndex": "date",
+                    "format": "YYYY-MM-DD",
+                    "inputType": "date"
+                },
+                {
+                    "title": "机构简介",
+                    "dataIndex": "desc",
+                    "inputType": "textArea"
+                },
+                {
+                    "title": "LOGO",
+                    "dataIndex": "logo",
+                    "fileIndex": "img",
+                    "inputType": "logo"
+                },
+                {
+                    "title": "图片",
+                    "dataIndex": "cover",
+                    "fileIndex": "cover",
+                    "inputType": "cover"
+                }
+            ]
+        }
+    },
+    "resultMsg": "操作成功"
+}

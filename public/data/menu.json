@@ -10,19 +10,39 @@
                 "children": [
                     {
                         "key": 111,
-                        "title": "远程调用",
+                        "title": "Iframe方式",
                         "value": "",
                         "icon": "BarsOutlined",
                         "children": [
                             {
                                 "key": 1111,
-                                "title": "iframe调用",
-                                "value": "/index/dll",
+                                "title": "Iframe页面1",
+                                "value": "",
                                 "icon": "BarsOutlined"
                             },
                             {
                                 "key": 1113,
-                                "title": "微服务调用",
+                                "title": "Iframe页面2",
+                                "value": "/index/activex",
+                                "icon": "BarsOutlined"
+                            }
+                        ]
+                    },
+                    {
+                        "key": 111,
+                        "title": "微前端方式",
+                        "value": "",
+                        "icon": "BarsOutlined",
+                        "children": [
+                            {
+                                "key": 1111,
+                                "title": "微前端1",
+                                "value": "",
+                                "icon": "BarsOutlined"
+                            },
+                            {
+                                "key": 1113,
+                                "title": "微前端2",
                                 "value": "/index/activex",
                                 "icon": "BarsOutlined"
                             }
@@ -30,7 +50,7 @@
                     }
                 ],
                 "key": 11,
-                "title": "调用示例",
+                "title": "远程调用",
                 "value": "",
                 "icon": "BarsOutlined"
             },
@@ -38,8 +58,8 @@
                 "children": [
                     {
                         "key": 121,
-                        "title": "404页面",
-                        "value": "/index/404",
+                        "title": "CURD表单",
+                        "value": "/index/curd-mapper",
                         "icon": "BarsOutlined"
                     },
                     {
@@ -50,7 +70,7 @@
                     }
                 ],
                 "key": 12,
-                "title": "插件示例",
+                "title": "动态表单",
                 "value": "",
                 "icon": "BarsOutlined"
             }

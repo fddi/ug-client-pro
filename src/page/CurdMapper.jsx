@@ -1,59 +1,57 @@
-import { message } from 'antd';
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import DynamicCurd from '../components/dynamic/DynamicCurd';
 import Page404 from './404'
 import Hold from './Hold'
 import StringUtils from '../util/StringUtils'
 import { post } from '../config/client'
+import { useRequest } from 'ahooks';
+import { Button, Modal, } from 'antd';
+import { SwapOutlined, } from '@ant-design/icons'
+import ReactJson from 'react-json-view';
 
 export default (props) => {
-    const { item, location } = props;
-    const [verify, setVerify] = useState(0);
-    const [modules, setModules] = useState({});
-    const query = (formCode) => {
-        post('/data/mapper', { formCode }).then((result) => {
-            if (result && 200 == result.resultCode) {
-                const data = result.resultData;
-                const verify = data && !StringUtils.isEmpty(data.formMapper) ? 1 : -1;
-                try {
-                    setVerify(verify);
-                    setModules(JSON.parse(data.formMapper));
-                } catch (error) {
-                    console.log(error)
-                    message.error("配置数据不是有效的JSON数据");
-                    setVerify(-1);
-                }
-            } else {
-                setVerify(-1);
-            }
-        })
-    }
+    const [modules, setModules] = useState(null);
+    const [visible, setVisible] = useState(null);
+    const { item, } = props;
+    let formCode = item && item.value;
+    const { data } = useRequest(() => post('/data/curd.json', { formCode }), {
+        loadingDelay: 1000,
+        manual: true,
+    })
     useEffect(() => {
-        console.log("run ......" + new Date().getTime());
-        const state = location && location.state;
-        let formCode = item && item.value;
-        if (StringUtils.isEmpty(formCode)) {
-            formCode = state && state.value;
+        if (result && 200 == result.resultCode) {
+            data = result.resultData;
+            data && setModules(JSON.parse(data.formMapper))
         }
-        if (!StringUtils.isEmpty(formCode)) {
-            query(formCode);
-        } else {
-            setVerify(-1);
-        }
-    }, []);
-    let view = <Hold />;
-    switch (verify) {
-        case 1:
-            view = (<DynamicCurd modules={modules} />);
-            break;
-        case -1:
-            view = <Page404 />;
-            break;
-        default: break;
+    }, [data])
+    let Curd = <Hold />;
+    if (StringUtils.isEmpty(data)) {
+        Curd = <Page404 />;
+    } else {
+        Curd = (<DynamicCurd modules={modules}
+            actions={[
+                <Button icon={<SwapOutlined />} onClick={() => setVisible(true)}>编辑modules数据</Button>
+            ]}
+        />);
+    }
+    jsonEdit = (obj) => {
+        setModules(obj.updated_src)
     }
     return (
         <Fragment>
-            {view}
+            {Curd}
+            <Modal
+                title={`JSON编辑器`}
+                visible={visible}
+                footer={null}
+                onCancel={() => setVisible(false)}
+                bodyStyle={{ padding: 0, }}
+            >
+                <ReactJson src={modules} theme="monokai" style={{ minHeight: 180 }}
+                    onEdit={jsonEdit}
+                    onAdd={jsonEdit}
+                    onDelete={jsonEdit} />
+            </Modal>
         </Fragment>
     );
 }
