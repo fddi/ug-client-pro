@@ -9,19 +9,17 @@ import { Button, Modal, } from 'antd';
 import { SwapOutlined, } from '@ant-design/icons'
 import ReactJson from 'react-json-view';
 
-export default (props) => {
+export default function CurdMapper(props) {
     const [modules, setModules] = useState(null);
     const [visible, setVisible] = useState(null);
     const { item, } = props;
     let formCode = item && item.value;
     const { data } = useRequest(() => post('/data/curd.json', { formCode }), {
         loadingDelay: 1000,
-        manual: true,
     })
     useEffect(() => {
-        if (result && 200 == result.resultCode) {
-            data = result.resultData;
-            data && setModules(JSON.parse(data.formMapper))
+        if (data && data.resultData) {
+            setModules(data.resultData.formMapper)
         }
     }, [data])
     let Curd = <Hold />;
@@ -34,7 +32,7 @@ export default (props) => {
             ]}
         />);
     }
-    jsonEdit = (obj) => {
+    const jsonEdit = (obj) => {
         setModules(obj.updated_src)
     }
     return (

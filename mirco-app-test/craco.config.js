@@ -7,7 +7,6 @@ module.exports = {
                 ...{
                     library: `${name}-[name]`,
                     libraryTarget: 'umd',
-                    jsonpFunction: `webpackJsonp_${name}`,
                     globalObject: 'window'
                 },
             }
@@ -20,7 +19,6 @@ module.exports = {
         };
         devServerConfig.historyApiFallback = true;
         devServerConfig.hot = false;
-        devServerConfig.watchContentBase = false;
         devServerConfig.liveReload = false;
         return devServerConfig;
     }

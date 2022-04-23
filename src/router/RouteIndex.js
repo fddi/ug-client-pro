@@ -9,5 +9,6 @@ export default {
         { path: '/index/hold', component: 'Hold' },
         { path: '/index/remote-if', component: 'RemoteIframe' },
         { path: '/index/remote-mirco', component: 'RemoteMirco' },
+        { path: '/index/curd-mapper', component: 'CurdMapper' },
     ]
 }

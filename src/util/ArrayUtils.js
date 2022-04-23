@@ -5,12 +5,12 @@ const generateList = (tree, dataList) => {
         return;
     }
     if (tree.key && tree.key > 0) {
-        const item = {
-            key: tree.key,
-            title: tree.title,
-            value: tree.value,
-            checked: tree.checked || false,
-        };
+        const item = {};
+        Object.keys(tree).forEach(key => {
+            if (key !== 'children') {
+                item[key] = tree[key]
+            }
+        })
         dataList.push(item);
     }
     const data = tree.children;

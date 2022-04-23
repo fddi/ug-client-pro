@@ -7,7 +7,7 @@ import { loadMicroApp } from 'qiankun';
 async function queryData(item) {
      let v = item && item.value;
      if (!StringUtils.isEmpty(v) && v.indexOf('http') === 0) {
-          item.uri = v;
+          item.publishUri = v;
           return new Promise((resolve) => {
                resolve(item);
           });
@@ -24,12 +24,12 @@ export default function RemoteMirco(props) {
                loadMicroApp({
                     name: data.title,
                     entry: data.publishUri,
-                    container: '#yourContainer'
+                    container: `#container-${props.item.key}`
                });
           }
      })
      return (
           <div style={{ border: 'none', height: '83vh', width: '100%' }}
-               id="container"></div>
+               id={`container-${props.item.key}`}></div>
      );
 }

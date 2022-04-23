@@ -11,22 +11,21 @@ import AsyncMenu from '../common/AsyncMenu';
  * 
  * **/
 export default function DynamicCurd(props) {
+
     const [params, setParams] = useState(props.params);
     const [extraValue, setExtraValue] = useState();
     const [row, setRow] = useState();
     const [refreshTime, setRefreshTime] = useState(new Date().getTime());
-
     useEffect(() => {
         const item = {};
         item['parentId'] = '0';
         item['unitCode'] = '';
-        const { modules, params } = props;
-        const cParams = { ...params };
-        if (!StringUtils.isEmpty(modules.extra)) {
-            const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
-            const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
+        const cParams = { ...props.params };
+        if (props.modules && !StringUtils.isEmpty(props.modules.extra)) {
+            const key = StringUtils.isEmpty(props.modules.extra.key) ? "key" : props.modules.extra.key;
+            const dataIndex = StringUtils.isEmpty(props.modules.extra.dataIndex) ? key : props.modules.extra.dataIndex;
             item[dataIndex] = extraValue;
-            params[dataIndex] = extraValue;
+            props.params[dataIndex] = extraValue;
             setParams(cParams);
         }
         setRow(item);
@@ -35,7 +34,9 @@ export default function DynamicCurd(props) {
     useEffect(() => {
         setRefreshTime(props.refreshTime)
     }, [props.refreshTime])
-
+    if (StringUtils.isEmpty(props.modules)) {
+        return null;
+    }
     const handleExtraSelect = (item) => {
         const { modules, onExtraSelect } = props;
         const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
@@ -54,7 +55,6 @@ export default function DynamicCurd(props) {
         setRefreshTime(new Date().getTime())
         props.onFinish && props.onFinish();
     }
-
     const { modules } = props;
     let spanForm = 13;
     if (StringUtils.isEmpty(modules.extra)) {
@@ -93,14 +93,14 @@ export default function DynamicCurd(props) {
             TreeData = (
                 <Col span={6} style={{ paddingTop: 5, backgroundColor: "#fff" }}>
                     <AsyncTree modules={modules} refreshTime={refreshTime}
-                        params={params} handleSelect={onselect} />
+                        params={params} handleSelect={onRowSelect} />
                 </Col>);
             break;
         case "table":
             TableData = (
                 <AsyncTable style={{ marginLeft: 5, marginRight: 5 }}
                     modules={modules} refreshTime={refreshTime}
-                    params={params} handleSelect={onselect}
+                    params={params} handleSelect={onRowSelect}
                     scroll={{ x: 600, y: 210 }} />);
             break;
         default:

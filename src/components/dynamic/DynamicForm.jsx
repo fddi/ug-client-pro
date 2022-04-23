@@ -12,16 +12,20 @@ import ReactJson from 'react-json-view';
 const FormItem = Form.Item;
 let adding = false;
 
-async function queryData(modules, row) {
+async function queryData(modules, params, row) {
     adding = false;
     const rowkey = modules.rowKey || modules.columns[0].dataIndex;
     const v = row[rowkey] || row['key'];
     if (!StringUtils.isEmpty(modules.queryApi) && !StringUtils.isEmpty(v)) {
-        return post(modules.queryApi, param).then((result) => result.resultData);
+        return post(modules.queryApi, params).then((result) => result.resultData);
     }
     return new Promise((resolve) => {
         resolve(null);
     });
+}
+
+function reset1() {
+
 }
 /**
  * 动态表单组件
@@ -33,14 +37,14 @@ export default function DynamicForm(props) {
     const [json, setJson] = useState();
     const [logo, setLogo] = useState();
     const [cover, setCover] = useState();
-    const { data, loading } = useRequest(() => queryData(props.modules, props.row),
+    const { data, loading } = useRequest(() => queryData(props.modules, props.params, props.row),
         {
             loadingDelay: 1000,
             refreshDeps: [props.row]
         });
     useEffect(() => {
         const { modules } = props;
-        !StringUtils.isEmpty(modules) && initState(modules)
+        !StringUtils.isEmpty(props.modules) && initState(props.modules)
     }, [props.modules]);
     //选中项变更
     useEffect(() => {
@@ -112,7 +116,7 @@ export default function DynamicForm(props) {
             return null;
         }
         const itemComs = [];
-        columns.forEach(item => {
+        row && columns.forEach(item => {
             switch (item.inputType) {
                 case "text":
                     itemComs.push(DynamicItem.text(item, row));
@@ -359,12 +363,12 @@ export default function DynamicForm(props) {
                 </Card>
                 <Modal
                     title={`JSON编辑器`}
-                    visible={json.jsonVisible}
+                    visible={json && json.jsonVisible}
                     footer={null}
                     onCancel={() => { setJson({ jsonVisible: false, jsonValue: null, jsonIndex: null }) }}
                     bodyStyle={{ padding: 0, }}
                 >
-                    <ReactJson src={json.jsonValue} theme="monokai" style={{ minHeight: 180 }}
+                    <ReactJson src={json && json.jsonValue} theme="monokai" style={{ minHeight: 180 }}
                         onEdit={jsonEdit}
                         onAdd={jsonEdit}
                         onDelete={jsonEdit} />

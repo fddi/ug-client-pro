@@ -12,7 +12,7 @@
     "craco-less": "^2.0.0",
     "crypto-js": "^4.1.1",
     "moment": "^2.29.1",
-    "qiankun": "^2.6.3",
+    "qiankun": "^2.7.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-json-view": "^1.21.3",

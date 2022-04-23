@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Tree, Input, message, } from 'antd';
 import { post } from "../../config/client";
 import StringUtils from '../../util/StringUtils';
@@ -88,7 +88,7 @@ export default function AsyncTree(props) {
         }
         const dropNode = info.node.props.item;
         const dropKey = info.dropToGap ? dropNode.parentKey : dropNode.key;
-        if (dropKey == dragNode.parentKey) {
+        if (dropKey === dragNode.parentKey) {
             return;
         }
         if (StringUtils.isEmpty(modules.dragDropApi)) {

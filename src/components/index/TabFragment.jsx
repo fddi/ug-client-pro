@@ -8,6 +8,7 @@ import StringUtils from '../../util/StringUtils';
 import RoutesIndex from '../../router/RouteIndex';
 import Redirect404 from '../../page/404';
 import Hold from '../../page/Hold';
+import CurdMapper from '../../page/CurdMapper';
 import { lag } from '../../config/lag'
 let localPages = [];
 const TabPane = Tabs.TabPane;
@@ -113,8 +114,16 @@ export default function TabFragment(props) {
             LoadableComponent = Redirect404
             switch (menu.type) {
                 case '2':
+                    LoadableComponent = Loadable({
+                        loader: () => import(`../../page/RemoteIframe`),
+                        loading: Hold
+                    })
                     break;
                 case '3':
+                    LoadableComponent = Loadable({
+                        loader: () => import(`../../page/RemoteMirco`),
+                        loading: Hold
+                    })
                     break;
                 default:
                     break;

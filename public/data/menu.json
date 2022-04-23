@@ -1,7 +1,7 @@
 {
     "resultCode": 200,
     "resultData": {
-        "key": 1,
+        "key": 0,
         "title": "根节点",
         "value": "/index/workbench",
         "icon": "icon",
@@ -9,47 +9,51 @@
             {
                 "children": [
                     {
-                        "key": 111,
+                        "key": 11,
                         "title": "Iframe方式",
                         "value": "",
                         "icon": "BarsOutlined",
                         "children": [
                             {
-                                "key": 1111,
+                                "key": 111,
                                 "title": "Iframe页面1",
-                                "value": "",
-                                "icon": "BarsOutlined"
+                                "value": "http://cn.bing.com",
+                                "icon": "BarsOutlined",
+                                "type": "2"
                             },
                             {
-                                "key": 1113,
+                                "key": 112,
                                 "title": "Iframe页面2",
-                                "value": "/index/activex",
-                                "icon": "BarsOutlined"
+                                "value": "https://reactjs.org/",
+                                "icon": "BarsOutlined",
+                                "type": "2"
                             }
                         ]
                     },
                     {
-                        "key": 111,
+                        "key": 12,
                         "title": "微前端方式",
                         "value": "",
                         "icon": "BarsOutlined",
                         "children": [
                             {
-                                "key": 1111,
+                                "key": 121,
                                 "title": "微前端1",
-                                "value": "",
-                                "icon": "BarsOutlined"
+                                "value": "http://localhost:3006/",
+                                "icon": "BarsOutlined",
+                                "type": "3"
                             },
                             {
-                                "key": 1113,
+                                "key": 122,
                                 "title": "微前端2",
-                                "value": "/index/activex",
-                                "icon": "BarsOutlined"
+                                "value": "http://localhost:3006/",
+                                "icon": "BarsOutlined",
+                                "type": "3"
                             }
                         ]
                     }
                 ],
-                "key": 11,
+                "key": 1,
                 "title": "远程调用",
                 "value": "",
                 "icon": "BarsOutlined"
@@ -57,19 +61,19 @@
             {
                 "children": [
                     {
-                        "key": 121,
+                        "key": 21,
                         "title": "CURD表单",
                         "value": "/index/curd-mapper",
                         "icon": "BarsOutlined"
                     },
                     {
-                        "key": 122,
+                        "key": 22,
                         "title": "加载等待页面",
                         "value": "/index/hold",
                         "icon": "BarsOutlined"
                     }
                 ],
-                "key": 12,
+                "key": 2,
                 "title": "动态表单",
                 "value": "",
                 "icon": "BarsOutlined"

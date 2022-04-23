@@ -37,7 +37,7 @@ export default function AsyncMenu(props) {
     function renderMenuItem(items) {
         const itemComs = [];
         const title = StringUtils.isEmpty(modules.title) ? "请添加标题.." : modules.title;
-        items.forEach(item => {
+        items && items.forEach(item => {
             itemComs.push((<Menu.Item key={"menu-tag-" + item[key]} menu={item}>
                 <MenuOutlined />
                 <span className="nav-text">{item[title]}</span>
