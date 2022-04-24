@@ -43,8 +43,24 @@ export default function DynamicForm(props) {
             refreshDeps: [props.row]
         });
     useEffect(() => {
-        const { modules } = props;
-        !StringUtils.isEmpty(props.modules) && initState(props.modules)
+        const logo = {}
+        const cover = {}
+        const modules = props.modules;
+        const columns = modules && modules.columns;
+        columns && columns.forEach(col => {
+            //组件为头像上传时的参数
+            if (col.inputType === "logo") {
+                logo.logoIndex = col.dataIndex;
+                logo.logoFileIndex = col.fileIndex
+            }
+            //组件为cover图片上传时的参数
+            if (col.inputType === "cover") {
+                cover.coverIndex = col.dataIndex;
+                cover.coverFileIndex = col.fileIndex
+            }
+        })
+        setLogo(logo);
+        setCover(cover);
     }, [props.modules]);
     //选中项变更
     useEffect(() => {
@@ -60,22 +76,7 @@ export default function DynamicForm(props) {
     }, [item])
 
     function initState(modules) {
-        const logo = {}
-        const cover = {}
-        modules.columns && modules.columns.forEach(col => {
-            //组件为头像上传时的参数
-            if (col.inputType === "logo") {
-                logo.logoIndex = col.dataIndex;
-                logo.logoFileIndex = col.fileIndex
-            }
-            //组件为cover图片上传时的参数
-            if (col.inputType === "cover") {
-                cover.coverIndex = col.dataIndex;
-                cover.coverFileIndex = col.fileIndex
-            }
-        })
-        setLogo(logo);
-        setCover(cover);
+
     }
 
     function reset(item) {
