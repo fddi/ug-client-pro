@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import DynamicCurd from '../components/dynamic/DynamicCurd';
-import Page404 from './404'
 import Hold from './Hold'
+import Redirect404 from './Redirect404'
 import StringUtils from '../util/StringUtils'
 import { post } from '../config/client'
 import { useRequest } from 'ahooks';
@@ -9,7 +9,8 @@ import { Button, Modal, } from 'antd';
 import { SwapOutlined, } from '@ant-design/icons'
 import ReactJson from 'react-json-view';
 
-export default function CurdMapper(props) {
+export default function CurdDemo(props) {
+    const [found, setFound] = useState(true);
     const [modules, setModules] = useState(null);
     const [visible, setVisible] = useState(null);
     const { item, } = props;
@@ -18,14 +19,16 @@ export default function CurdMapper(props) {
         loadingDelay: 1000,
     })
     useEffect(() => {
-        if (data && data.resultData) {
-            setModules(data.resultData.formMapper)
+        if (!StringUtils.isEmpty(data)) {
+            if (data.resultData) {
+                setModules(data.resultData.formMapper)
+            } else {
+                setFound(false);
+            }
         }
     }, [data])
-    let Curd = <Hold />;
-    if (StringUtils.isEmpty(data)) {
-        Curd = <Page404 />;
-    } else {
+    let Curd = found ? <Hold /> : <Redirect404 />;
+    if (!StringUtils.isEmpty(modules)) {
         Curd = (<DynamicCurd modules={modules}
             actions={[
                 <Button icon={<SwapOutlined />} onClick={() => setVisible(true)}>编辑modules数据</Button>

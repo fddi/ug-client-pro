@@ -29,18 +29,18 @@ export default function AsyncMenu(props) {
         });
 
     const key = StringUtils.isEmpty(modules.key) ? "key" : modules.key;
-    if (data && data[0].selected === true) {
-        setSelectedKeys(["menu-tag-" + data[0][key]])
-        handleClick && handleClick(data[0])
-    }
+    // if (data && data[0].selected === true) {
+    //     setSelectedKeys(["menu-tag-" + data[0][key]])
+    //     handleClick && handleClick(data[0])
+    // }
 
     function renderMenuItem(items) {
         const itemComs = [];
         const title = StringUtils.isEmpty(modules.title) ? "请添加标题.." : modules.title;
         items && items.forEach(item => {
-            itemComs.push((<Menu.Item key={"menu-tag-" + item[key]} menu={item}>
+            itemComs.push((<Menu.Item key={"menu-tag-" + item.key} >
                 <MenuOutlined />
-                <span className="nav-text">{item[title]}</span>
+                <span className="nav-text">{item.title}</span>
             </Menu.Item>));
         });
         return itemComs;
@@ -55,7 +55,7 @@ export default function AsyncMenu(props) {
             mode="inline"
             selectedKeys={selectedKeys}
             onSelect={handleSelect}
-            style={{ height: '100%', }}
+            style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
         >
             {renderMenuItem(data)}
         </Menu>

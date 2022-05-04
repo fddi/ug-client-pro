@@ -4,7 +4,7 @@ import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
 function queryData(catalog, dictCode) {
-    return post('data/dict-list.json', { catalog, dictCode })
+    return post('data/dict.json', { catalog, dictCode })
 }
 
 export default function AsyncTag(props) {

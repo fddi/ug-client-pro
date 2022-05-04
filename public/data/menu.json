@@ -3,8 +3,6 @@
     "resultData": {
         "key": 0,
         "title": "根节点",
-        "value": "/index/workbench",
-        "icon": "icon",
         "children": [
             {
                 "children": [
@@ -39,14 +37,14 @@
                             {
                                 "key": 121,
                                 "title": "微前端1",
-                                "value": "http://localhost:3006/",
+                                "value": "http://localhost:3001/",
                                 "icon": "BarsOutlined",
                                 "type": "3"
                             },
                             {
                                 "key": 122,
                                 "title": "微前端2",
-                                "value": "http://localhost:3006/",
+                                "value": "http://localhost:3001/",
                                 "icon": "BarsOutlined",
                                 "type": "3"
                             }
@@ -62,14 +60,14 @@
                 "children": [
                     {
                         "key": 21,
-                        "title": "CURD表单",
-                        "value": "/index/curd-mapper",
+                        "title": "动态表单",
+                        "value": "/index/dynamic?formCode=1",
                         "icon": "BarsOutlined"
                     },
                     {
                         "key": 22,
-                        "title": "加载等待页面",
-                        "value": "/index/hold",
+                        "title": "CURD组合",
+                        "value": "/index/curd",
                         "icon": "BarsOutlined"
                     }
                 ],

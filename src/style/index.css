@@ -16,8 +16,8 @@ figure pre {
 }
 
 .header {
-  padding   : 0px;
-  background: #fff;
+  padding         : 0px;
+  background-color: rgb(255, 255, 255, 1);
 }
 
 .ant-layout-content {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Navigate
 } from 'react-router-dom';
@@ -22,7 +22,7 @@ async function queryData(localSearch, key) {
                 break;
             }
         }
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(menuTree);
             }, 1000);
@@ -41,12 +41,24 @@ async function queryData(localSearch, key) {
         return menuTree;
     })
 }
-export default function Index(props) {
+export default function Index() {
     const [jump, setJump] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const [activeMenu, setActiveMenu] = useState();
     const { data, loading, run } = useRequest(queryData, { loadingDelay: 1000 });
-    function handleMenuClick(e) {
+
+    function onChange(activeKey) {
+        if (activeKey === "tab-main-default") {
+            setActiveMenu({ key: 0 })
+        } else {
+            activeKey = activeKey.substr("tab-main-".length);
+            const menu = menuList.find(
+                item => (item.key == activeKey));
+            menu && setActiveMenu(menu)
+        }
+    }
+
+    function onSelect(e) {
         if (e.key.indexOf("menu-top-") >= 0) {
             run(true, e.key);
         }
@@ -79,16 +91,16 @@ export default function Index(props) {
                         {APPNMAE}
                     </h1>
                 </div>
-                <MenuTree menuClick={(e) => handleMenuClick(e)} mode='inline'
-                    menus={data && data.left} collapsed={collapsed} />
+                <MenuTree onSelect={onSelect} mode='inline'
+                    menus={data && data.left} collapsed={collapsed} activeMenu={activeMenu} />
             </Sider>
             <Layout>
                 <Header className="header">
-                    <MainHeader nickName={`demo`} linkToLogin={() => linkToLogin()}
-                        menus={data && data.top} menuClick={(e) => handleMenuClick(e)} />
+                    <MainHeader nickName={`demo`} linkToLogin={linkToLogin}
+                        menus={data && data.top} onSelect={onSelect} />
                 </Header>
                 <Content className="content">
-                    <TabFragment activeMenu={activeMenu} />
+                    <TabFragment activeMenu={activeMenu} onChange={onChange} />
                 </Content>
             </Layout>
         </Layout>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Input, Avatar, Form } from 'antd';
+import { Table, Input, Avatar, Form, Card } from 'antd';
 import StringUtils from '../../util/StringUtils';
 import { post, getImgUrl } from "../../config/client";
 import { useAntdTable, useUpdateEffect } from 'ahooks';
@@ -56,39 +56,41 @@ export default function AsyncTable(props) {
         handleSelect && handleSelect(selectedRowKeys, row);
     }
 
-    const searchBar = () => (
+    const searchBar = (
         <Form form={form}>
-            <Form.Item name={modules.searchKey}>
+            <Form.Item name={modules.searchKey} noStyle>
                 <Input.Search
                     style={{ marginBottom: 5 }} allowClear
                     onSearch={search.submit} />
             </Form.Item>
         </Form>);
-    const header = StringUtils.isEmpty(modules.searchKey) ? false : searchBar;
+    const header = StringUtils.isEmpty(modules.searchKey) ? null : searchBar;
     return (
-        <Table
-            style={{ backgroundColor: '#fff', ...props.style }}
-            size="small"
-            columns={filterCols(modules.columns)}
-            rowKey={modules.rowKey}
-            onRow={record => {
-                if (modules.selectType === 'checkbox') {
-                    return null;
-                }
-                return {
-                    onClick: e => { onSelect([record[modules.rowKey]], record) }, // 点击行
-                };
-            }}
-            bordered
-            title={header}
-            scroll={{ y: 420, scrollToFirstRowOnChange: true, ...props.scroll }}
-            rowSelection={{
-                columnWidth: 30,
-                type: modules.selectType || 'radio',
-                selectedRowKeys: keys,
-                onChange: (selectedRowKeys, rows) => { onSelect(selectedRowKeys, rows && rows[0]) }
-            }}
-            {...tableProps}
-        />
+        <Card bordered={false} size='small' title={header}
+        >
+            <Table
+                style={{ ...props.style }}
+                size="small"
+                columns={filterCols(modules.columns)}
+                rowKey={modules.key}
+                onRow={record => {
+                    if (modules.selectType === 'checkbox') {
+                        return null;
+                    }
+                    return {
+                        onClick: e => { onSelect([record[modules.rowKey]], record) }, // 点击行
+                    };
+                }}
+                bordered
+                scroll={{ scrollToFirstRowOnChange: true, ...props.scroll }}
+                rowSelection={{
+                    columnWidth: 30,
+                    type: modules.selectType || 'radio',
+                    selectedRowKeys: keys,
+                    onChange: (selectedRowKeys, rows) => { onSelect(selectedRowKeys, rows && rows[0]) }
+                }}
+                {...tableProps}
+            />
+        </Card>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Spin, Form, Input, Button, Modal, Card, message, Space, Dropdown, Menu, Row } from 'antd';
+import { Spin, Form, Button, Modal, Card, message, Space, Dropdown, Menu, Row } from 'antd';
 import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { post } from "../../config/client";
@@ -9,11 +9,15 @@ import StringUtils from '../../util/StringUtils';
 import DynamicItem from './DynamicItem';
 import { useRequest } from 'ahooks';
 import ReactJson from 'react-json-view';
-const FormItem = Form.Item;
 let adding = false;
 
 async function queryData(modules, params, row) {
     adding = false;
+    if (StringUtils.isEmpty(row)) {
+        return new Promise((resolve) => {
+            resolve(null);
+        });
+    }
     const rowkey = modules.rowKey || modules.columns[0].dataIndex;
     const v = row[rowkey] || row['key'];
     if (!StringUtils.isEmpty(modules.queryApi) && !StringUtils.isEmpty(v)) {
@@ -24,9 +28,6 @@ async function queryData(modules, params, row) {
     });
 }
 
-function reset1() {
-
-}
 /**
  * 动态表单组件
  * **/
@@ -64,23 +65,19 @@ export default function DynamicForm(props) {
     }, [props.modules]);
     //选中项变更
     useEffect(() => {
-        reset(props.row);
-    }, [props.row]);
+        reset(props.modules, props.row);
+    }, [props.modules, props.row]);
     //返回值变更
     useEffect(() => {
-        reset(data)
-    }, [data])
+        reset(props.modules, data)
+    }, [props.modules, data])
     //初始值变更
     useEffect(() => {
-        form.current.resetFields();
-    }, [item])
+        console.log(item)
+        form.resetFields();
+    }, [form, item])
 
-    function initState(modules) {
-
-    }
-
-    function reset(item) {
-        const { modules } = props;
+    function reset(modules, item) {
         if (!StringUtils.isEmpty(item)) {
             item.refreshTime = new Date().getTime();
             modules.columns.forEach(col => {
@@ -109,6 +106,7 @@ export default function DynamicForm(props) {
                 }
             })
         }
+        debugger
         setItem(item)
     }
 
@@ -117,7 +115,7 @@ export default function DynamicForm(props) {
             return null;
         }
         const itemComs = [];
-        row && columns.forEach(item => {
+        columns.forEach(item => {
             switch (item.inputType) {
                 case "text":
                     itemComs.push(DynamicItem.text(item, row));
@@ -167,7 +165,7 @@ export default function DynamicForm(props) {
     }
 
     const onJsonClick = (dataIndex) => {
-        let json = form.current.getFieldValue(dataIndex);
+        let json = form.getFieldValue(dataIndex);
         if (StringUtils.isEmpty(json)) {
             json = {};
         } else {
@@ -188,13 +186,13 @@ export default function DynamicForm(props) {
     const jsonEdit = (obj) => {
         const newJson = { ...json, jsonValue: obj.updated_src };
         setJson(newJson)
-        const data = form.current.getFieldsValue();
+        const data = form.getFieldsValue();
         data[json.jsonIndex] = JSON.stringify(obj.updated_src)
-        form.current.setFieldsValue(data);
+        form.setFieldsValue(data);
     }
 
     const onFinish = () => {
-        form.current.validateFields().then(values => {
+        form.validateFields().then(values => {
             const { modules, onFinish } = props;
             modules.columns.forEach(col => {
                 //date组件格式化
@@ -257,26 +255,32 @@ export default function DynamicForm(props) {
         }
         adding = true;
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
-        const initItem = {};
-        initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
-        initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
-        if (!StringUtils.isEmpty(modules.extra)) {
-            const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
-            const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
-            initItem[dataIndex] = item[dataIndex];
+        const initItem = { 'parentId': '0' };
+        if (!StringUtils.isEmpty(item)) {
+            initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
+            initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
+            if (!StringUtils.isEmpty(modules.extra)) {
+                const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
+                const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
+                initItem[dataIndex] = item[dataIndex];
+            }
         }
-        reset(initItem);
+        reset(modules, initItem);
     }
 
     const handleDel = () => {
         const { modules, row } = props;
+        if (StringUtils.isEmpty(row)) {
+            message.warning('no data');
+            return;
+        }
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
         let key = row[rowKey] || row.key;
         if (StringUtils.isEmpty(key) || key == "0") {
             message.warn(lag.npe);
             return;
         }
-        key = form.current.getFieldValue(rowKey);
+        key = form.getFieldValue(rowKey);
         if (StringUtils.isEmpty(key) || key == "0") {
             message.warn(lag.npe);
             return;
@@ -354,9 +358,6 @@ export default function DynamicForm(props) {
                         sm: { span: 16 },
                     }} initialValues={item} layout="vertical"
                         form={form} size="middle">
-                        <FormItem name="token" noStyle>
-                            <Input type="hidden" />
-                        </FormItem>
                         <Row>
                             {renderItem(props.modules.columns, item)}
                         </Row>

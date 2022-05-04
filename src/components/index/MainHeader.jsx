@@ -16,6 +16,22 @@ export default function HeaderView(props) {
           }
      }, [props.menus])
 
+     function handleMenuSelect(e) {
+          switch (parseInt(e.key)) {
+               case 101:
+                    break;
+               case 102:
+                    break;
+               case 103:
+                    props.linkToLogin && props.linkToLogin();
+                    break;
+               default:
+                    setSelectedKeys(e.selectedKeys)
+                    props.onSelect && props.onSelect(e)
+                    break;
+          }
+     }
+
      function handleMenuClick(e) {
           switch (parseInt(e.key)) {
                case 101:
@@ -23,22 +39,9 @@ export default function HeaderView(props) {
                case 102:
                     break;
                case 103:
-                    props.linkToLogin();
+                    props.linkToLogin && props.linkToLogin();
                     break;
                default:
-                    props.menuClick(e)
-                    break;
-          }
-     }
-
-     function handleMenuSelect(e) {
-          switch (parseInt(e.key)) {
-               case 101:
-                    break;
-               case 102:
-                    break;
-               default:
-                    setSelectedKeys(e.selectedKeys)
                     break;
           }
      }
@@ -68,9 +71,8 @@ export default function HeaderView(props) {
                          theme="light"
                          mode="horizontal"
                          style={{ lineHeight: '64px' }}
-                         onClick={(e) => { handleMenuClick(e) }}
                          selectedKeys={selectedKeys}
-                         onSelect={(e) => { handleMenuSelect(e) }}
+                         onSelect={handleMenuSelect}
                     >
                          {buildItems(props.menus)}
                     </Menu></Col>
@@ -81,7 +83,9 @@ export default function HeaderView(props) {
                          mode="horizontal"
                          style={{ lineHeight: '64px' }}
                          selectable={false}
-                         onClick={(e) => { handleMenuClick(e) }}>
+                         onSelect={handleMenuSelect}
+                         onClick={handleMenuClick}
+                    >
                          <Menu.Item key="101">
                               <Badge count={2} size='small'>
                                    <MessageOutlined />

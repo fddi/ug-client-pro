@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, } from 'antd';
 import { Icon } from '../common/PreIcon';
 import StringUtils from '../../util/StringUtils';
@@ -6,7 +6,12 @@ const SubMenu = Menu.SubMenu;
 
 export default function MenuTree(props) {
 
-     const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
+     const [selectedKeys, setSelectedKeys] = useState([]);
+     useEffect(() => {
+          if (props.activeMenu) {
+               setSelectedKeys([`menu-tree-${props.activeMenu.key}`]);
+          }
+     }, [props.activeMenu]);
 
      function getItems(menus) {
           const items = [];
@@ -39,7 +44,8 @@ export default function MenuTree(props) {
           <Menu
                theme="dark"
                mode={props.mode}
-               onClick={props.menuClick}
+               onSelect={props.onSelect}
+               selectedKeys={selectedKeys}
           >
                {getItems(props.menus)}
           </Menu>

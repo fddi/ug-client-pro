@@ -1,12 +1,10 @@
 import React from 'react'
 import { Skeleton } from 'antd'
-import { lag } from '../config/lag'
 
-export default function Hold(props) {
+export default function Hold() {
      return (
-          <div style={{ padding: 20, width: "100%", height: "100%", background: '#fff' }}>
-               <Skeleton active />
-               <Skeleton active />
+          <div style={{ padding: 30 }}>
+               <Skeleton active paragraph={{ rows: 12 }} />
           </div>
      );
 }

@@ -5,7 +5,7 @@ import { useRequest, useUpdateEffect } from 'ahooks';
 
 export default function AsyncTreeSelect(props) {
     const [value, setValue] = useState(props.value || '');
-    const { data } = useRequest(() => post('data/dict-list.json',
+    const { data } = useRequest(() => post('data/dict.json',
         { catalog: props.catalog, dictCode: props.dictCode }),
         {
             loadingDelay: 1000,

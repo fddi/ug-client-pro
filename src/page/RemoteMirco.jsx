@@ -3,6 +3,7 @@ import { post } from '../config/client'
 import StringUtils from '../util/StringUtils'
 import { useRequest } from 'ahooks';
 import { loadMicroApp } from 'qiankun';
+import Hold from './Hold'
 
 async function queryData(item) {
      let v = item && item.value;
@@ -29,7 +30,9 @@ export default function RemoteMirco(props) {
           }
      })
      return (
-          <div style={{ border: 'none', height: '83vh', width: '100%' }}
-               id={`container-${props.item.key}`}></div>
+          <div style={{ border: 'none', height: '88vh', width: '100%' }}
+               id={`container-${props.item.key}`}>
+               <Hold />
+          </div>
      );
 }

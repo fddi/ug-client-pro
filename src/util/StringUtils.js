@@ -1,4 +1,4 @@
-export default {
+const StringUtils = {
   isEmpty: function (str) {
     if (str === null || str === undefined || str === "" || str === "null" || str === "undefined" || JSON.stringify(str) == "{}")
       return true;
@@ -31,3 +31,5 @@ export default {
     return `${size}GB`;
   },
 }
+
+export default StringUtils;

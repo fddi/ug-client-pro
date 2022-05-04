@@ -4,15 +4,13 @@ const generateList = (tree, dataList) => {
     if (StringUtils.isEmpty(tree)) {
         return;
     }
-    if (tree.key && tree.key > 0) {
-        const item = {};
-        Object.keys(tree).forEach(key => {
-            if (key !== 'children') {
-                item[key] = tree[key]
-            }
-        })
-        dataList.push(item);
-    }
+    const item = {};
+    Object.keys(tree).forEach(key => {
+        if (key !== 'children') {
+            item[key] = tree[key]
+        }
+    })
+    dataList.push(item);
     const data = tree.children;
     if (StringUtils.isEmpty(data)) {
         return;
@@ -23,7 +21,7 @@ const generateList = (tree, dataList) => {
     }
 };
 
-export default {
+const ArrayUtils = {
     objToArray: function (obj) {
         let array = [];
         Object.keys(obj).forEach(key => {
@@ -33,3 +31,5 @@ export default {
     },
     treeToArray: generateList,
 }
+
+export default ArrayUtils;

@@ -13,7 +13,7 @@ const itemStyle = {
 
 const checkDisabled = (item, data) => {
     if (item.disabled) return item.disabled;
-    if (!StringUtils.isEmpty(data[item.dataIndex]) && item.updateDisabled) {
+    if (data && !StringUtils.isEmpty(data[item.dataIndex]) && item.updateDisabled) {
         return item.updateDisabled;
     }
     return false;

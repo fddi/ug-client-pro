@@ -11,7 +11,7 @@ function queryData(catalog, dictCode) {
             resolve(null);
         });
     }
-    return post('data/dict-list.json', { catalog, dictCode })
+    return post('data/dict.json', { catalog, dictCode })
 }
 
 export default function AsyncSelect(props) {
@@ -50,7 +50,7 @@ export default function AsyncSelect(props) {
                 itemComs.push((<Select.Option value="0" key={"tf-0"}>否</Select.Option>));
                 break;
             default:
-                data.forEach((item) => {
+                data && data.forEach((item) => {
                     itemComs.push((<Select.Option value={item.dictCode}
                         key={"ds-" + item.dictId}>{item.dictName}</Select.Option>));
                 })

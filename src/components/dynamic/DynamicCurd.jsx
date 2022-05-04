@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Row, Col, Button, Space } from 'antd';
+import { Row, Col, Button, Space, Card } from 'antd';
 import { ReloadOutlined, } from '@ant-design/icons';
 import DynamicForm from './DynamicForm';
 import StringUtils from '../../util/StringUtils';
@@ -25,7 +25,7 @@ export default function DynamicCurd(props) {
             const key = StringUtils.isEmpty(props.modules.extra.key) ? "key" : props.modules.extra.key;
             const dataIndex = StringUtils.isEmpty(props.modules.extra.dataIndex) ? key : props.modules.extra.dataIndex;
             item[dataIndex] = extraValue;
-            props.params[dataIndex] = extraValue;
+            cParams[dataIndex] = extraValue;
             setParams(cParams);
         }
         setRow(item);
@@ -60,7 +60,7 @@ export default function DynamicCurd(props) {
     if (StringUtils.isEmpty(modules.extra)) {
         spanForm += 5;
     }
-    if (modules.dataType === "table") {
+    if (modules.type === "table") {
         spanForm += 6;
     }
     let Extra = (null);
@@ -69,7 +69,7 @@ export default function DynamicCurd(props) {
         switch (modules.extra.type) {
             case "tree":
                 Extra = (
-                    <Col span={5} style={{ paddingTop: 5, borderRight: "1px solid #ccc", backgroundColor: "#fff" }}>
+                    <Col span={5} style={{ height: '100%', overflowY: 'auto' }}>
                         <AsyncTree modules={modules.extra} refreshTime={refreshTime}
                             params={params} handleSelect={handleExtraSelect} />
                     </Col>);
@@ -91,14 +91,14 @@ export default function DynamicCurd(props) {
         //数据展示控件 支持树和表格
         case "tree":
             TreeData = (
-                <Col span={6} style={{ paddingTop: 5, backgroundColor: "#fff" }}>
+                <Col span={6}>
                     <AsyncTree modules={modules} refreshTime={refreshTime}
                         params={params} handleSelect={onRowSelect} />
                 </Col>);
             break;
         case "table":
             TableData = (
-                <AsyncTable style={{ marginLeft: 5, marginRight: 5 }}
+                <AsyncTable
                     modules={modules} refreshTime={refreshTime}
                     params={params} handleSelect={onRowSelect}
                     scroll={{ x: 600, y: 210 }} />);
@@ -108,22 +108,25 @@ export default function DynamicCurd(props) {
     }
     return (
         <Fragment>
-            <Space style={{
-                backgroundColor: "#fff",
-                padding: 10,
+            <Card bodyStyle={{ padding: 0 }} bordered={false} style={{
                 marginBottom: 5,
-                width: '100%'
-            }} size="small">
-                <Button style={{ marginRight: 5, }} icon={<ReloadOutlined />}
-                    onClick={onFinish}>重载</Button>
-                {props.actions && props.actions.map((Com, index) => {
-                    return <Fragment key={`action-${index}`}>{Com}</Fragment>
-                })}
-            </Space>
-            <Row gutter={[8, 8]} style={{ flex: '1', height: '76vh', ...props.style }}>
+            }}>
+                <Space style={{
+                    padding: 10
+                }} size="small">
+                    <Button style={{ marginRight: 5, }} icon={<ReloadOutlined />}
+                        onClick={onFinish}>重载</Button>
+                    {props.actions && props.actions.map((Com, index) => {
+                        return <Fragment key={`action-${index}`}>{Com}</Fragment>
+                    })}
+                </Space>
+            </Card>
+            <Row gutter={[8, 8]} style={{
+                height: 'calc(100vh - 155px)', ...props.style
+            }}>
                 {Extra}
                 {TreeData}
-                <Col span={spanForm} style={{ overflowY: "auto" }}>
+                <Col span={spanForm} style={{ height: '100%', overflowY: "auto" }}>
                     {TableData}
                     <DynamicForm modules={modules} style={{ margin: 5 }}
                         row={row} onFinish={onFinish} />

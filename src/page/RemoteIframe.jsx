@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import Redirect404 from './404'
+import Redirect404 from './Redirect404'
 import { post } from '../config/client'
 import StringUtils from '../util/StringUtils'
 import { useRequest } from 'ahooks';
@@ -21,8 +21,8 @@ export default function RemoteIframe(props) {
      return (
           <Fragment>
                {(data && data.publishUri) ? (<iframe
-                    src={data.publishUri}
-                    style={{ border: 'none', height: '83vh', width: '100%' }}></iframe>) : (<Redirect404 />)}
+                    src={data.publishUri} title={data.title}
+                    style={{ border: 'none', height: '88vh', width: '100%' }}></iframe>) : (<Redirect404 />)}
           </Fragment>
      );
 }

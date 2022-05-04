@@ -6,12 +6,12 @@ import Workbench from '../../page/WorkBench'
 import TabProvider from './TabProvider';
 import StringUtils from '../../util/StringUtils';
 import RoutesIndex from '../../router/RouteIndex';
-import Redirect404 from '../../page/404';
+import Redirect404 from '../../page/Redirect404';
 import Hold from '../../page/Hold';
-import CurdMapper from '../../page/CurdMapper';
 import { lag } from '../../config/lag'
 let localPages = [];
 const TabPane = Tabs.TabPane;
+
 export default function TabFragment(props) {
     const [menu, addMenu] = useState();
     const [pages, setPages] = useState([]);
@@ -23,6 +23,10 @@ export default function TabFragment(props) {
     }, [props.activeMenu]);
 
     useEffect(() => {
+        if (menu && menu.key === 0) {
+            setActiveKey("tab-main-default")
+            return;
+        }
         let geted = false;
         if (StringUtils.isEmpty(menu) || StringUtils.isEmpty(menu.value)) {
             return
@@ -64,14 +68,14 @@ export default function TabFragment(props) {
         let key = activeKey === targetKey ? preActiveKey : activeKey
         localPages = newPages;
         setPages(localPages)
-        setActiveKey(key)
+        onChange(key);
     }
 
     const clearTabs = () => {
         localPages = [];
         setPages([]);
-        setActiveKey("tab-main-default")
         setPopVisible(false)
+        onChange("tab-main-default")
     }
 
     const removeTabPage = (menu) => {
@@ -87,7 +91,7 @@ export default function TabFragment(props) {
             }
             const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.title}</span>)}
                 key={"tab-main-" + item.key} closable={true}
-                style={{ height: '84vh', overflowY: "auto", overflowX: "hidden", }}>
+                style={{ height: '100vh', overflowY: "auto", overflowX: "hidden", }}>
                 <TabProvider addTabPage={addTabPage}
                     removeTabPage={removeTabPage} >
                     <TabPage item={item} />
@@ -102,9 +106,14 @@ export default function TabFragment(props) {
         let LoadableComponent = (null)
         let component = null
         if (!StringUtils.isEmpty(menu)) {
+            let path = menu.value;
+            if (!StringUtils.isEmpty(path)) {
+                let end = path.indexOf("?") > 0 ? path.indexOf("?") : path.length;
+                path = path.substring(0, end);
+            }
             for (let index = 0; index < RoutesIndex.routes.length; index++) {
                 const route = RoutesIndex.routes[index]
-                if (route.path === menu.value) {
+                if (route.path === path) {
                     component = route.component
                     break
                 }
@@ -138,11 +147,19 @@ export default function TabFragment(props) {
         return LoadableComponent
     }
 
+    function onChange(activeKey) {
+        if (props.onChange) {
+            props.onChange(activeKey)
+        } else {
+            setActiveKey(activeKey)
+        }
+    }
+
     return (
         <Tabs
             hideAdd
             type="editable-card"
-            onChange={(key) => setActiveKey(key)}
+            onChange={onChange}
             onEdit={onTabEdit}
             activeKey={activeKey}
             tabBarStyle={{ margin: 0 }}
@@ -162,7 +179,7 @@ export default function TabFragment(props) {
         >
             <TabPane tab={(<span style={{ userSelect: 'none', }}>工作台</span>)}
                 key="tab-main-default" closable={false}
-                style={{ height: '84vh', overflowY: "auto", overflowX: "hidden" }}>
+                style={{ height: '100vh', overflowY: "auto", overflowX: "hidden" }}>
                 <Workbench addTabPage={addTabPage} />
             </TabPane>
             {renderTabPanes(pages)}
