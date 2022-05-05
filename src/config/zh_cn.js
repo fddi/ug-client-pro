@@ -26,4 +26,6 @@ export const zh_cn = {
     confirmDel: '确认删除数据？',
     del: '删除',
     confirmClearTabs: '是否清理所有选项卡窗口？',
+    noData: '没有选择数据或数据为空',
+    errorJson:'JSON表达式格式错误',
 };

@@ -10,6 +10,12 @@ const FormItem = Form.Item;
 const itemStyle = {
     margin: 5,
 }
+const layout = {
+    xs: 24,
+    sm: 12,
+    lg: 8,
+    xl: 6
+}
 
 const checkDisabled = (item, data) => {
     if (item.disabled) return item.disabled;
@@ -22,7 +28,7 @@ const checkDisabled = (item, data) => {
 export default {
     text(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -39,7 +45,7 @@ export default {
 
     textArea(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -68,7 +74,7 @@ export default {
 
     number(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -76,7 +82,8 @@ export default {
                     name={item.dataIndex}
                     rules={[{ required: item.required, message: item.message || '' }]}
                 >
-                    <InputNumber type="text" disabled={checkDisabled(item, data)} readOnly={item.readOnly} />
+                    <InputNumber style={{ width: '100%' }}
+                        type="text" disabled={checkDisabled(item, data)} readOnly={item.readOnly} />
                 </FormItem>
             </Col>
         )
@@ -84,7 +91,7 @@ export default {
 
     select(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -101,7 +108,7 @@ export default {
 
     treeSelect(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -118,13 +125,13 @@ export default {
 
     uploadLogo(item, data, onChange) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
                     key={"fts-" + item.dataIndex}
                 >
-                    <UploadLogo onChange={onChange} refreshTime={data.refreshTime}
+                    <UploadLogo onChange={onChange} refreshTime={data && data.refreshTime}
                         imgKey={data && data[item.dataIndex]} />
                 </FormItem>
             </Col>
@@ -133,7 +140,7 @@ export default {
 
     date(item, data) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -142,9 +149,10 @@ export default {
                     rules={[{ required: item.required, message: item.message || '' }]}
                 >
                     <DatePicker
+                        style={{ width: '100%' }}
                         placeholder={item.message || ''}
                         format={item.format || "YYYY-MM-DD HH:mm:ss"}
-                        showTime={true}
+                        showTime={item.format && item.format.length <= 10 ? false : true}
                         disabled={checkDisabled(item, data)}
                     />
                 </FormItem>
@@ -154,13 +162,13 @@ export default {
 
     uploadCover(item, data, onChange) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
                     key={"fts-" + item.dataIndex}
                 >
-                    <UploadCover onChange={onChange} refreshTime={data.refreshTime}
+                    <UploadCover onChange={onChange} refreshTime={data && data.refreshTime}
                         imgKey={data && data[item.dataIndex]} style={{ width: "100%", height: 160, }} />
                 </FormItem>
             </Col>
@@ -169,7 +177,7 @@ export default {
 
     jsonEdit(item, data, handleClick) {
         return (
-            <Col span={8} key={"fc-" + item.dataIndex}>
+            <Col {...layout} key={"fc-" + item.dataIndex}>
                 <FormItem
                     style={itemStyle}
                     label={item.title}
@@ -180,7 +188,7 @@ export default {
                     disabled={checkDisabled(item, data)} readOnly={item.readOnly}
                     autoSize={{ minRows: 2, maxRows: 6 }} />
                 </FormItem>
-                <Button style={{ position: 'absolute', left: 100, top: 5 }}
+                <Button style={{ position: 'absolute', right: 5, top: 5 }}
                     icon={<FormOutlined />} onClick={() => handleClick(item.dataIndex)} size="small" />
             </Col>
         )

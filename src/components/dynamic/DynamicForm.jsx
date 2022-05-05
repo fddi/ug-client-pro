@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Spin, Form, Button, Modal, Card, message, Space, Dropdown, Menu, Row } from 'antd';
-import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { post } from "../../config/client";
 import { lag } from "../../config/lag";
 import { jsonToFormData } from "../../util/FetchTo";
 import StringUtils from '../../util/StringUtils';
 import DynamicItem from './DynamicItem';
-import { useRequest } from 'ahooks';
+import { useRequest, useUpdateEffect } from 'ahooks';
 import ReactJson from 'react-json-view';
-let adding = false;
 
 async function queryData(modules, params, row) {
-    adding = false;
     if (StringUtils.isEmpty(row)) {
         return new Promise((resolve) => {
             resolve(null);
@@ -33,6 +31,7 @@ async function queryData(modules, params, row) {
  * **/
 export default function DynamicForm(props) {
     const [form] = Form.useForm();
+    const [add, setAdd] = useState(true);
     const [spinning, setSpinning] = useState(false);
     const [item, setItem] = useState();
     const [json, setJson] = useState();
@@ -64,49 +63,52 @@ export default function DynamicForm(props) {
         setCover(cover);
     }, [props.modules]);
     //选中项变更
-    useEffect(() => {
+    useUpdateEffect(() => {
         reset(props.modules, props.row);
     }, [props.modules, props.row]);
-    //返回值变更
-    useEffect(() => {
-        reset(props.modules, data)
+    //查询返回值变更
+    useUpdateEffect(() => {
+        if (!StringUtils.isEmpty(data)) {
+            reset(props.modules, data);
+        }
     }, [props.modules, data])
-    //初始值变更
-    useEffect(() => {
-        console.log(item)
+    //重置表单数据
+    useUpdateEffect(() => {
         form.resetFields();
     }, [form, item])
-
     function reset(modules, item) {
-        if (!StringUtils.isEmpty(item)) {
-            item.refreshTime = new Date().getTime();
-            modules.columns.forEach(col => {
-                const defaultValue = StringUtils.isEmpty(col.defaultValue) ? '' : col.defaultValue;
-                const initialValue = StringUtils.isEmpty(item[col.dataIndex]) ? defaultValue : item[col.dataIndex];
-                item[col.dataIndex] = initialValue;
-                if (col.inputType === "date") {
-                    let m = item[col.dataIndex];
-                    if (!StringUtils.isEmpty(m)) {
-                        m = moment(m, col.format || "YYYY-MM-DD HH:mm:ss");
-                        item[col.dataIndex] = m;
-                    }
-                }
-                if (col.inputType === "json") {
-                    let json = item[col.dataIndex];
-                    if (StringUtils.isEmpty(json)) {
-                        json = {};
-                    } else {
-                        try {
-                            json = JSON.parse(json);
-                        } catch (error) {
-                            json = {};
-                        }
-                    }
-                    setJson(json);
-                }
-            })
+        if (StringUtils.isEmpty(item)) {
+            item = {};
+            setAdd(true);
+        } else {
+            setAdd(false);
         }
-        debugger
+        item.refreshTime = new Date().getTime();
+        modules.columns.forEach(col => {
+            const defaultValue = StringUtils.isEmpty(col.defaultValue) ? '' : col.defaultValue;
+            const initialValue = StringUtils.isEmpty(item[col.dataIndex]) ? defaultValue : item[col.dataIndex];
+            item[col.dataIndex] = initialValue;
+            if (col.inputType === "date") {
+                let m = item[col.dataIndex];
+                if (!StringUtils.isEmpty(m)) {
+                    m = moment(m, col.format || "YYYY-MM-DD HH:mm:ss");
+                    item[col.dataIndex] = m;
+                }
+            }
+            if (col.inputType === "json") {
+                let json = item[col.dataIndex];
+                if (StringUtils.isEmpty(json)) {
+                    json = {};
+                } else {
+                    try {
+                        json = JSON.parse(json);
+                    } catch (error) {
+                        json = {};
+                    }
+                }
+                setJson(json);
+            }
+        })
         setItem(item)
     }
 
@@ -172,7 +174,7 @@ export default function DynamicForm(props) {
             try {
                 json = JSON.parse(json);
             } catch (error) {
-                message.warn("配置项值不是JSON表达式！");
+                message.warn(lag.errorJson);
                 json = null;
             }
         }
@@ -197,11 +199,11 @@ export default function DynamicForm(props) {
             modules.columns.forEach(col => {
                 //date组件格式化
                 if (col.inputType === "date" && !StringUtils.isEmpty(values[col.dataIndex])) {
-                    values[col.dataIndex] = values[col.dataIndex].format('YYYY-MM-DD HH:mm:ss');
+                    values[col.dataIndex] = values[col.dataIndex].format(col.format || 'YYYY-MM-DD HH:mm:ss');
                 }
             })
             setSpinning(true)
-            const upload = modules.upload ? modules.upload : false;
+            const upload = logo || cover ? true : false;
             if (upload) {
                 //表单包含文件上传
                 const formData = jsonToFormData(values);
@@ -227,7 +229,7 @@ export default function DynamicForm(props) {
                     setSpinning(false);
                     if (result && 200 === result.resultCode) {
                         message.success(result.resultMsg);
-                        onFinish();
+                        onFinish && onFinish();
                     } else {
                         const msg = result ? result.resultMsg : lag.errorNetwork;
                         message.error(msg)
@@ -238,7 +240,7 @@ export default function DynamicForm(props) {
                     setSpinning(false);
                     if (result && 200 === result.resultCode) {
                         message.success(result.resultMsg);
-                        onFinish();
+                        onFinish && onFinish();
                     } else {
                         const msg = result ? result.resultMsg : lag.errorNetwork;
                         message.error(msg)
@@ -248,30 +250,27 @@ export default function DynamicForm(props) {
         })
     }
 
-    const handleAdd = () => {
+    const handleReset = () => {
         const { modules } = props;
-        if (adding) {
-            return;
-        }
-        adding = true;
-        const rowKey = modules.rowKey || modules.columns[0].dataIndex;
-        const initItem = { 'parentId': '0' };
-        if (!StringUtils.isEmpty(item)) {
-            initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
-            initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
-            if (!StringUtils.isEmpty(modules.extra)) {
-                const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
-                const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
-                initItem[dataIndex] = item[dataIndex];
-            }
-        }
-        reset(modules, initItem);
+        // const rowKey = modules.rowKey || modules.columns[0].dataIndex;
+        // const initItem = {};
+        // if (!StringUtils.isEmpty(item)) {
+        //     initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
+        //     initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
+        //     if (!StringUtils.isEmpty(modules.extra)) {
+        //         const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
+        //         const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
+        //         initItem[dataIndex] = item[dataIndex];
+        //     }
+        // }
+        props.onReset && props.onReset()
+        reset(modules, null);
     }
 
     const handleDel = () => {
         const { modules, row } = props;
         if (StringUtils.isEmpty(row)) {
-            message.warning('no data');
+            message.warning(lag.noData);
             return;
         }
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
@@ -325,16 +324,16 @@ export default function DynamicForm(props) {
         }
     }
 
-    const addDisabled = props.modules.addDisabled ? props.modules.addDisabled : false;
     const saveDisabled = props.modules.saveDisabled ? props.modules.saveDisabled : false;
     const delDisabled = props.modules.delDisabled ? props.modules.delDisabled : false;
+    const Save = add ? (<Button icon={<PlusOutlined />} onClick={onFinish} type="primary" danger>增加</Button>)
+        : (<Button icon={<CheckOutlined />} onClick={onFinish} type="primary">保存</Button>)
     const extra = (
         <Space>
-            {addDisabled ? (null) : (<Button icon={<PlusOutlined />}
-                onClick={handleAdd} >新增</Button>)}
-            {saveDisabled ? (null) : (<Button icon={<CheckOutlined />}
-                onClick={onFinish} type="primary">保存</Button>)}
+            {saveDisabled ? (null) : Save}
             <Dropdown overlay={(<Menu onClick={handleMenuClick}>
+                <Menu.Item key="2" icon={<ReloadOutlined />}
+                    onClick={handleReset} >重置</Menu.Item>
                 {delDisabled ? (null) :
                     (<Menu.Item key="1" icon={<DeleteOutlined />} > 删除 </Menu.Item>)}
             </Menu>)}>
@@ -350,14 +349,17 @@ export default function DynamicForm(props) {
                     bodyStyle={{ padding: 6, }}
                     extra={extra}
                 >
-                    <Form labelCol={{
-                        xs: { span: 22 },
-                        sm: { span: 22 },
-                    }} wrapperCol={{
-                        xs: { span: 22 },
-                        sm: { span: 16 },
-                    }} initialValues={item} layout="vertical"
-                        form={form} size="middle">
+                    <Form
+                        labelAlign='right'
+                        labelCol={{
+                            span: 8
+                        }}
+                        labelWrap={true}
+                        initialValues={item}
+                        layout="horizontal"
+                        form={form}
+                        size="middle"
+                    >
                         <Row>
                             {renderItem(props.modules.columns, item)}
                         </Row>

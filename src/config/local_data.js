@@ -11,7 +11,25 @@ export default async function getLocalData(url, params) {
     }), 3000)
         .then((response) => response.json())
         .then(result => {
-            console.log(params)
+            if (url.indexOf('dict') > 0) {
+                const data = searchDict(params, result.resultData)
+                return data
+            }
             return result
         })
+}
+
+function searchDict(params, data) {
+    const dictCode = params.dictCode;
+    if (data['value'] == dictCode) {
+        return data.children;
+    }
+    if (data.children) {
+        for (let i = 0; i < data.children.length; i++) {
+            const item = data.children[i];
+            const r = searchDict(params, item);
+            if (r) { return r; }
+        }
+    }
+    return null;
 }

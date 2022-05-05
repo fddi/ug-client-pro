@@ -91,7 +91,7 @@ export default function TabFragment(props) {
             }
             const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.title}</span>)}
                 key={"tab-main-" + item.key} closable={true}
-                style={{ height: '100vh', overflowY: "auto", overflowX: "hidden", }}>
+                style={{ height: '86vh', overflowY: "auto", overflowX: "hidden", }}>
                 <TabProvider addTabPage={addTabPage}
                     removeTabPage={removeTabPage} >
                     <TabPage item={item} />

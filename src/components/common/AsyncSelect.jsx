@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select, } from 'antd';
 import { icons, } from '../common/PreIcon';
 import StringUtils from '../../util/StringUtils';
@@ -6,12 +6,12 @@ import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
 function queryData(catalog, dictCode) {
-    if (catalog === "icon" && catalog === "TF") {
+    if (StringUtils.isEmpty(catalog) || catalog === "icon" || catalog === "TF") {
         return new Promise((resolve) => {
             resolve(null);
         });
     }
-    return post('data/dict.json', { catalog, dictCode })
+    return post('data/dict.json', { catalog, dictCode})
 }
 
 export default function AsyncSelect(props) {
@@ -51,8 +51,8 @@ export default function AsyncSelect(props) {
                 break;
             default:
                 data && data.forEach((item) => {
-                    itemComs.push((<Select.Option value={item.dictCode}
-                        key={"ds-" + item.dictId}>{item.dictName}</Select.Option>));
+                    itemComs.push((<Select.Option value={item.value}
+                        key={"ds-" + item.id}>{item.title}</Select.Option>));
                 })
                 break;
         }
@@ -70,6 +70,7 @@ export default function AsyncSelect(props) {
             value={value}
             placeholder={props.placeholder}
             showSearch
+            allowClear
         >
             {renderOptions(data)}
         </Select>

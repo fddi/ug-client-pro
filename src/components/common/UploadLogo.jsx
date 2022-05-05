@@ -3,11 +3,15 @@ import { Avatar, Upload, message, } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
 import { getFileByBase64 } from '../../util/FileUtils';
 import { lag } from "../../config/lag";
+import { useUpdateEffect } from "ahooks";
 
 export default function UploadLogo(props) {
      const [file, setFile] = useState();
      const [data, setData] = useState();
-
+     useUpdateEffect(() => {
+          setFile(null)
+          setData(null)
+     }, [props.refreshTime])
      useEffect(() => {
           setData(props.url)
      }, [props.url])

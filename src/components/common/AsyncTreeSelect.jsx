@@ -21,14 +21,13 @@ export default function AsyncTreeSelect(props) {
     }
 
     const defaultStyle = {
-        width: 150,
+        width: '100%',
     }
     const autoFocus = props.autoFocus ? true : false;
     return (
         <TreeSelect style={{ ...defaultStyle, ...props.style }}
             disabled={props.disabled}
             onChange={handleChange}
-            mode={props.mode}
             autoFocus={autoFocus}
             treeData={data}
             value={value}
@@ -36,6 +35,7 @@ export default function AsyncTreeSelect(props) {
             showCheckedStrategy={TreeSelect.SHOW_ALL}
             placeholder={props.placeholder}
             showSearch
+            allowClear
         />
     )
 }
