@@ -4,6 +4,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { getFileByBase64 } from '../../util/FileUtils';
 import { lag } from "../../config/lag";
 import { useUpdateEffect } from "ahooks";
+import ImgCrop from "antd-img-crop";
 
 export default function UploadLogo(props) {
      const [file, setFile] = useState();
@@ -41,14 +42,16 @@ export default function UploadLogo(props) {
           </div>
      );
      return (
-          <Upload
-               listType="picture-card"
-               className="avatar-uploader c-avatar"
-               showUploadList={false}
-               beforeUpload={beforeUpload}
-               customRequest={() => { }}
-          >
-               {data ? <Avatar size={90} src={data} /> : uploadButton}
-          </Upload>
+          <ImgCrop>
+               <Upload
+                    listType="picture-card"
+                    className="avatar-uploader c-avatar"
+                    showUploadList={false}
+                    beforeUpload={beforeUpload}
+                    customRequest={() => { }}
+               >
+                    {data ? <Avatar size={90} src={data} /> : uploadButton}
+               </Upload>
+          </ImgCrop>
      )
 }

@@ -34,31 +34,34 @@ export default function UploadCover(props) {
           return false;
      }
 
-     const onFileDelete = () => {
+     const onFileDelete = (e) => {
           setFile(null);
           setData(null);
+          e.stopPropagation();
      }
 
-     const defaultStyle = { position: "relative", height: 200, width: 340 };
+     const defaultStyle = { position: "relative", };
      const { style } = props;
      const imgView = (<div style={{ ...defaultStyle, ...style }}>
           <Button style={{ position: 'absolute', top: '45%', left: '45%' }} ghost
                size='large' shape="circle" icon={<DeleteOutlined />} onClick={onFileDelete} />
           <img src={data} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
      </div>);
-     const uploadView = (<Upload.Dragger
-          showUploadList={false}
-          beforeUpload={beforeUpload}
-          style={{ ...defaultStyle, ...style }}
-     >
-          <p className="ant-upload-drag-icon">
-               <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">{lag.tipUploadFile}</p>
-     </Upload.Dragger>);
-     return (
+     const uploadView = (
           <Fragment>
+               <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+               </p>
+               <p className="ant-upload-text">{lag.tipUploadFile}</p>
+          </Fragment>);
+     return (
+          <Upload.Dragger
+               beforeUpload={beforeUpload}
+               showUploadList={false}
+               style={{ ...defaultStyle, ...style }}
+               customRequest={() => { }}
+          >
                {data ? imgView : uploadView}
-          </Fragment>
+          </Upload.Dragger>
      )
 }

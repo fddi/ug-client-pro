@@ -36,7 +36,6 @@ export default function DynamicForm(props) {
     const [item, setItem] = useState();
     const [json, setJson] = useState();
     const [logo, setLogo] = useState();
-    const [cover, setCover] = useState();
     const { data, loading } = useRequest(() => queryData(props.modules, props.params, props.row),
         {
             loadingDelay: 1000,
@@ -44,7 +43,6 @@ export default function DynamicForm(props) {
         });
     useEffect(() => {
         const logo = {}
-        const cover = {}
         const modules = props.modules;
         const columns = modules && modules.columns;
         columns && columns.forEach(col => {
@@ -53,14 +51,8 @@ export default function DynamicForm(props) {
                 logo.logoIndex = col.dataIndex;
                 logo.logoFileIndex = col.fileIndex
             }
-            //组件为cover图片上传时的参数
-            if (col.inputType === "cover") {
-                cover.coverIndex = col.dataIndex;
-                cover.coverFileIndex = col.fileIndex
-            }
         })
         setLogo(logo);
-        setCover(cover);
     }, [props.modules]);
     //选中项变更
     useUpdateEffect(() => {
@@ -140,9 +132,6 @@ export default function DynamicForm(props) {
                 case "logo":
                     itemComs.push(DynamicItem.uploadLogo(item, row, onLogoChange));
                     break;
-                case "cover":
-                    itemComs.push(DynamicItem.uploadCover(item, row, onCoverChange));
-                    break;
                 case "date":
                     itemComs.push(DynamicItem.date(item, row));
                     break;
@@ -159,11 +148,6 @@ export default function DynamicForm(props) {
     const onLogoChange = (file) => {
         const newLogo = { ...logo, logoFile: file }
         setLogo(newLogo);
-    }
-
-    const onCoverChange = (file) => {
-        const newCover = { ...cover, coverFile: file }
-        setLogo(newCover);
     }
 
     const onJsonClick = (dataIndex) => {
@@ -203,7 +187,7 @@ export default function DynamicForm(props) {
                 }
             })
             setSpinning(true)
-            const upload = logo || cover ? true : false;
+            const upload = logo ? true : false;
             if (upload) {
                 //表单包含文件上传
                 const formData = jsonToFormData(values);
@@ -214,15 +198,6 @@ export default function DynamicForm(props) {
                     }
                     if (item && !StringUtils.isEmpty(item[logo.logoIndex])) {
                         formData.append(logo.logoIndex, item[logo.logoIndex])
-                    }
-                }
-                //cover上传
-                if (cover && cover.coverIndex) {
-                    if (cover.coverFile) {
-                        formData.append(cover.coverFileIndex, cover.coverFile)
-                    }
-                    if (item && !StringUtils.isEmpty(item[cover.coverIndex])) {
-                        formData.append(cover.coverIndex, item[cover.coverIndex])
                     }
                 }
                 post(modules.saveApi, formData, false).then((result) => {

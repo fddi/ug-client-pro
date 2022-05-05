@@ -98,12 +98,6 @@
                     "fileIndex": "file1"
                 },
                 {
-                    "title": "图片",
-                    "dataIndex": "cover",
-                    "inputType": "cover",
-                    "fileIndex": "file2"
-                },
-                {
                     "title": "JSON编辑",
                     "dataIndex": "json",
                     "inputType": "json"
