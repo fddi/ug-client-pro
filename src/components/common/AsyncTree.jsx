@@ -3,7 +3,7 @@ import { Tree, Input, message, } from 'antd';
 import { post } from "../../config/client";
 import StringUtils from '../../util/StringUtils';
 import ArrayUtils from '../../util/ArrayUtils';
-import { useRequest } from 'ahooks';
+import { useRequest, useUpdateEffect } from 'ahooks';
 let dataList = []
 let allRoot;
 function searchTree(value) {
@@ -13,6 +13,9 @@ function searchTree(value) {
     let selectItems = [];
     for (let i = 0; i < dataList.length; i++) {
         const item = dataList[i];
+        if (StringUtils.isEmpty(item.title)) {
+            continue;
+        }
         const lv = item.title.toUpperCase();
         const vv = StringUtils.isEmpty(item.value) ? null : item.value.toUpperCase();
         const rv = value.toUpperCase();
@@ -24,28 +27,33 @@ function searchTree(value) {
     }
     let root = null;
     if (selectItems.length > 0) {
-        root = { key: 0, children: selectItems };
+        root = selectItems;
     }
     return root;
 }
 
-async function queryData(modules, params, localSearch = false, v) {
+async function queryData(modules, extraItem, localSearch, v) {
     if (localSearch) {
         return new Promise((resolve) => {
             resolve(searchTree(v));
         });
-    } else {
-        return post(modules.queryApi, { parentKey: 0, ...params }).then((result) => {
-            if (result && 200 === result.resultCode) {
-                const root = result.resultData;
-                allRoot = result.resultData;
-                ArrayUtils.treeToArray(root, dataList);
-                return root;
-            } else {
-                return null;
-            }
-        });
     }
+    let params = modules.params;
+    if (!StringUtils.isEmpty(modules.extra) && !StringUtils.isEmpty(extraItem)) {
+        const key = modules.extra.rowKey;
+        const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
+        params[searchKey] = extraItem[key]
+    }
+    return post(modules.queryApi, params).then((result) => {
+        if (result && 200 === result.resultCode) {
+            const root = result.resultData;
+            allRoot = result.resultData;
+            ArrayUtils.treeToArray({ key: 0, children: root }, dataList);
+            return root;
+        } else {
+            return null;
+        }
+    });
 }
 
 /**
@@ -54,18 +62,25 @@ async function queryData(modules, params, localSearch = false, v) {
 export default function AsyncTree(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [expandedKeys, setExpandedKeys] = useState([]);
-    const { modules, params, refreshTime } = props;
-    const { data, run, } = useRequest((localSearch = false, v) => queryData(modules, params, localSearch, v),
+    const { modules, extraItem, refreshTime } = props;
+    const { data, run, } = useRequest(queryData,
         {
             loadingDelay: 1000,
-            refreshDeps: [params, refreshTime],
+            defaultParams: [modules]
         });
+    useUpdateEffect(() => {
+        run(modules, extraItem)
+    }, [modules, extraItem, refreshTime])
 
     const handleSelect = (keys, e) => {
         const { handleSelect } = props;
-        const item = e.node.item;
-        if (!StringUtils.isEmpty(item.key) && item.key != 0) {
-            handleSelect && handleSelect(item);
+        if (StringUtils.isEmpty(keys) || keys.length === 0) {
+            handleSelect && handleSelect(null);
+        } else {
+            const item = e.node;
+            if (!StringUtils.isEmpty(item.key) && item.key != 0) {
+                handleSelect && handleSelect(item);
+            }
         }
         setSelectedKeys(keys)
     }
@@ -77,45 +92,44 @@ export default function AsyncTree(props) {
     const onChange = e => {
         setSelectedKeys([]); setExpandedKeys([]);
         const { value } = e.target;
-        run(true, value);
+        run(modules, extraItem, true, value);
     };
 
     const onDrop = info => {
-        const dragNode = info.dragNode.props.item;
+        const dragNode = info.dragNode;
         if (dragNode.children != null && dragNode.children.length > 0) {
             message.warn("只能移动叶子节点数据！");
             return;
         }
-        const dropNode = info.node.props.item;
-        const dropKey = info.dropToGap ? dropNode.parentKey : dropNode.key;
-        if (dropKey === dragNode.parentKey) {
+        const dropNode = info.node;
+        const dropId = info.dropToGap ? dropNode.parentId : dropNode.id;
+        if (dropId === dragNode.parentId) {
             return;
         }
         if (StringUtils.isEmpty(modules.dragDropApi)) {
             return;
         }
         post(modules.dragDropApi, {
-            dragKey: dragNode.key,
-            dropKey
+            dragId: dragNode.id,
+            dropId
         }).then((result) => {
             if (result && 200 === result.resultCode) {
-                run(modules, params);
+                run(modules);
             }
         })
     }
-
-    const height = window.innerHeight - 240;
+    const height = window.innerHeight - 190;
     return (
         <Fragment>
             <Input.Search
                 allowClear
                 style={{ marginBottom: 5 }}
                 onChange={onChange} />
-            <Tree.DirectoryTree
+            <Tree
                 expandAction={false}
                 height={height}
                 onSelect={handleSelect}
-                showLine={false}
+                showLine={true}
                 selectedKeys={selectedKeys}
                 onExpand={onExpand}
                 expandedKeys={expandedKeys}
@@ -132,7 +146,7 @@ export default function AsyncTree(props) {
                     if (nodeData.status == "0") {
                         title = (<s>{title}</s>);
                     }
-                    return ({ title })
+                    return (<span>{title}</span>)
                 }}
             />
         </Fragment>

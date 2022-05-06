@@ -3,16 +3,25 @@
     "resultData": {
         "formMapper": {
             "title": "示例",
-            "rowKey": "id",
+            "rowKey": "key",
             "searchKey": "title",
             "saveApi": "data/success.json",
             "delApi": "data/success.json",
-            "findApi": "data/success.json",
-            "queryApi": "",
+            "queryApi": "data/dict.json",
+            "findApi": "",
             "dragDropApi": "",
-            "dataType": "tree",
+            "type": "table",
             "params": {
-                "parentId": 0
+                "table": true
+            },
+            "extra": {
+                "queryApi": "data/dict.json",
+                "type": "tree",
+                "rowKey": "key",
+                "searchKey": "dictCode",
+                "params": {
+                    "dictCode": "0"
+                }
             },
             "columns": [
                 {
@@ -30,7 +39,7 @@
                 },
                 {
                     "title": "代码",
-                    "dataIndex": "dictCode",
+                    "dataIndex": "value",
                     "inputType": "text",
                     "pattern": "^[A-Za-z0-9]{4,16}",
                     "required": true,
@@ -47,31 +56,21 @@
                     "colsType": "hidden"
                 },
                 {
-                    "title": "是否启用",
-                    "dataIndex": "status",
+                    "title": "状态",
+                    "dataIndex": "checked",
                     "inputType": "text",
                     "catalog": "TF"
                 },
                 {
                     "title": "父节点",
-                    "dataIndex": "parentCode",
+                    "dataIndex": "parentId",
                     "inputType": "text",
-                    "catalog": "porg"
+                    "disabled": true,
+                    "readOnly": true
                 },
                 {
-                    "title": "排序",
-                    "dataIndex": "sort",
-                    "inputType": "number"
-                },
-                {
-                    "title": "成立时间",
-                    "dataIndex": "optCreate",
-                    "format": "YYYY-MM-DD",
-                    "inputType": "date"
-                },
-                {
-                    "title": "额外",
-                    "dataIndex": "extraData",
+                    "title": "备注",
+                    "dataIndex": "note",
                     "inputType": "textArea"
                 }
             ]

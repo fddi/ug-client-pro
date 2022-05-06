@@ -29,4 +29,5 @@ export const zh_cn = {
     noData: '没有选择数据或数据为空',
     errorJson: 'JSON表达式格式错误',
     alertFileSize: '图片大小必须在20MB以内!',
+    noKey: '没有找到对应的数据ID',
 };

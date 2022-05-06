@@ -3,12 +3,17 @@ import { Table, Input, Avatar, Form, Card } from 'antd';
 import StringUtils from '../../util/StringUtils';
 import { post, getImgUrl } from "../../config/client";
 import { useAntdTable, useUpdateEffect } from 'ahooks';
-async function queryData({ current, pageSize }, formData, params, modules) {
+async function queryData({ current, pageSize }, formData, modules, extraItem) {
     const addParams = {
         pageSize: pageSize,
         pageNo: current,
-        ...formData,
-        ...params
+        ...modules.params,
+        ...formData
+    }
+    if (!StringUtils.isEmpty(modules.extra) && !StringUtils.isEmpty(extraItem)) {
+        const key = modules.extra.rowKey;
+        const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
+        addParams[searchKey] = extraItem[key]
     }
     return post(modules.queryApi, addParams).then((result) => ({
         total: result.resultData && result.resultData.totalElements,
@@ -40,20 +45,19 @@ function filterCols(columns) {
 export default function AsyncTable(props) {
     const [keys, setKeys] = useState([]);
     const [form] = Form.useForm();
-    const { modules } = props;
-    const { tableProps, search } = useAntdTable((obj, formData) => queryData(obj, formData, props.params, modules), {
+    const { modules, extraItem } = props;
+    const { tableProps, search } = useAntdTable((obj, formData) => queryData(obj, formData, modules, extraItem), {
         defaultPageSize: 20,
         form,
     });
-
     useUpdateEffect(() => {
         search.submit();
-    }, [props.params, props.refreshTime])
+    }, [modules, extraItem, props.refreshTime])
 
     function onSelect(selectedRowKeys, row) {
         const { handleSelect } = props;
         setKeys(selectedRowKeys)
-        handleSelect && handleSelect(selectedRowKeys, row);
+        handleSelect && handleSelect(row);
     }
 
     const searchBar = (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spin, Form, Button, Modal, Card, message, Space, Dropdown, Menu, Row } from 'antd';
-import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined, ReloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined, } from '@ant-design/icons';
 import moment from 'moment';
 import { post } from "../../config/client";
 import { lag } from "../../config/lag";
@@ -10,7 +10,7 @@ import DynamicItem from './DynamicItem';
 import { useRequest, useUpdateEffect } from 'ahooks';
 import ReactJson from 'react-json-view';
 
-async function queryData(modules, params, row) {
+async function queryData(modules, row) {
     if (StringUtils.isEmpty(row)) {
         return new Promise((resolve) => {
             resolve(null);
@@ -18,8 +18,8 @@ async function queryData(modules, params, row) {
     }
     const rowkey = modules.rowKey || modules.columns[0].dataIndex;
     const v = row[rowkey] || row['key'];
-    if (!StringUtils.isEmpty(modules.queryApi) && !StringUtils.isEmpty(v)) {
-        return post(modules.queryApi, params).then((result) => result.resultData);
+    if (!StringUtils.isEmpty(modules.findOneApi) && !StringUtils.isEmpty(v)) {
+        return post(modules.queryApi, modules.params).then((result) => result.resultData);
     }
     return new Promise((resolve) => {
         resolve(null);
@@ -31,12 +31,12 @@ async function queryData(modules, params, row) {
  * **/
 export default function DynamicForm(props) {
     const [form] = Form.useForm();
-    const [add, setAdd] = useState(true);
+    const [insert, setInsert] = useState(true);
     const [spinning, setSpinning] = useState(false);
     const [item, setItem] = useState();
     const [json, setJson] = useState();
     const [logo, setLogo] = useState();
-    const { data, loading } = useRequest(() => queryData(props.modules, props.params, props.row),
+    const { data, loading } = useRequest(() => queryData(props.modules, props.row),
         {
             loadingDelay: 1000,
             refreshDeps: [props.row]
@@ -53,27 +53,32 @@ export default function DynamicForm(props) {
             }
         })
         setLogo(logo);
+        handleInsert();
     }, [props.modules]);
     //选中项变更
     useUpdateEffect(() => {
-        reset(props.modules, props.row);
+        if (!StringUtils.isEmpty(props.row)) {
+            setInsert(false)
+        }
+        reset(props.modules, props.row)
     }, [props.modules, props.row]);
     //查询返回值变更
     useUpdateEffect(() => {
         if (!StringUtils.isEmpty(data)) {
-            reset(props.modules, data);
+            setInsert(false)
+
         }
+        reset(props.modules, data);
     }, [props.modules, data])
     //重置表单数据
     useUpdateEffect(() => {
         form.resetFields();
     }, [form, item])
+
     function reset(modules, item) {
         if (StringUtils.isEmpty(item)) {
             item = {};
-            setAdd(true);
-        } else {
-            setAdd(false);
+            item['parentId'] = "0"
         }
         item.refreshTime = new Date().getTime();
         modules.columns.forEach(col => {
@@ -187,7 +192,7 @@ export default function DynamicForm(props) {
                 }
             })
             setSpinning(true)
-            const upload = logo ? true : false;
+            const upload = StringUtils.isEmpty(logo) ? false : true;
             if (upload) {
                 //表单包含文件上传
                 const formData = jsonToFormData(values);
@@ -225,21 +230,25 @@ export default function DynamicForm(props) {
         })
     }
 
-    const handleReset = () => {
+    const handleInsert = () => {
         const { modules } = props;
-        // const rowKey = modules.rowKey || modules.columns[0].dataIndex;
-        // const initItem = {};
-        // if (!StringUtils.isEmpty(item)) {
-        //     initItem['parentId'] = StringUtils.isEmpty(item[rowKey]) ? "0" : item[rowKey];
-        //     initItem['unitCode'] = StringUtils.isEmpty(item['unitCode']) ? "" : item['unitCode'];
-        //     if (!StringUtils.isEmpty(modules.extra)) {
-        //         const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
-        //         const dataIndex = StringUtils.isEmpty(modules.extra.dataIndex) ? key : modules.extra.dataIndex;
-        //         initItem[dataIndex] = item[dataIndex];
-        //     }
-        // }
+        const rowKey = modules.rowKey || modules.columns[0].dataIndex;
+        const initItem = {};
+        if (modules.type === "tree") initItem['parentId'] = "0"
+        if (!StringUtils.isEmpty(item)) {
+            //新增时默认选中项为父项
+            initItem['parentId'] = item[rowKey] || "0";
+            initItem['unitCode'] = item['unitCode'] || "";
+            if (!StringUtils.isEmpty(modules.extra)) {
+                const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
+                const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
+                //额外项保存
+                initItem[searchKey] = item[key];
+            }
+        }
         props.onReset && props.onReset()
-        reset(modules, null);
+        setInsert(true);
+        reset(modules, initItem);
     }
 
     const handleDel = () => {
@@ -251,19 +260,19 @@ export default function DynamicForm(props) {
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
         let key = row[rowKey] || row.key;
         if (StringUtils.isEmpty(key) || key == "0") {
-            message.warn(lag.npe);
+            message.warn(lag.noKey);
             return;
         }
         key = form.getFieldValue(rowKey);
         if (StringUtils.isEmpty(key) || key == "0") {
-            message.warn(lag.npe);
+            message.warn(lag.noKey);
             return;
         }
         const params = {};
         params[rowKey] = key;
         Modal.confirm({
             title: lag.confirmDel,
-            content: lag.del,
+            content: `${lag.del}:${rowKey}=${key}`,
             okText: lag.ok,
             okType: 'danger',
             cancelText: lag.cancel,
@@ -290,7 +299,7 @@ export default function DynamicForm(props) {
     const handleMenuClick = (e) => {
         switch (e.key) {
             case "1":
-                handleReset()
+                handleInsert()
                 break;
             case "2":
                 handleDel();
@@ -300,13 +309,13 @@ export default function DynamicForm(props) {
         }
     }
 
-    const items = [{ key: "1", icon: <ReloadOutlined />, label: "重置" },
+    const items = [{ key: "1", icon: <PlusOutlined />, label: "新增" },
     { key: "2", icon: <DeleteOutlined />, label: "删除" }];
     const saveDisabled = props.modules.saveDisabled ? props.modules.saveDisabled : false;
     const delDisabled = props.modules.delDisabled ? props.modules.delDisabled : false;
     delDisabled && items.pop();
-    const Save = add ? (<Button icon={<PlusOutlined />} onClick={onFinish} type="primary" danger>增加</Button>)
-        : (<Button icon={<CheckOutlined />} onClick={onFinish} type="primary">保存</Button>)
+    const Save = insert ? (<Button icon={<CheckOutlined />} onClick={onFinish} type="primary" danger>新增提交</Button>)
+        : (<Button icon={<CheckOutlined />} onClick={onFinish} type="primary">保存提交</Button>)
     const extra = (
         <Space>
             {saveDisabled ? (null) : Save}

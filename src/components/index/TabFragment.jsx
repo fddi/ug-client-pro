@@ -91,7 +91,7 @@ export default function TabFragment(props) {
             }
             const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.label}</span>)}
                 key={"tab-main-" + item.key} closable={true}
-                style={{ height: '86vh', overflowY: "auto", overflowX: "hidden", }}>
+                style={{ height: 'calc(100vh - 100px)', overflowY: "auto", overflowX: "hidden", }}>
                 <TabProvider addTabPage={addTabPage}
                     removeTabPage={removeTabPage} >
                     <TabPage item={item} />
@@ -179,7 +179,7 @@ export default function TabFragment(props) {
         >
             <TabPane tab={(<span style={{ userSelect: 'none', }}>工作台</span>)}
                 key="tab-main-default" closable={false}
-                style={{ height: '86vh', overflowY: "auto", overflowX: "hidden" }}>
+                style={{ height: 'calc(100vh - 100px)', overflowY: "auto", overflowX: "hidden" }}>
                 <Workbench addTabPage={addTabPage} />
             </TabPane>
             {renderTabPanes(pages)}

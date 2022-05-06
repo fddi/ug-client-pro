@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import DynamicCurd from '../components/dynamic/DynamicCurd';
 import Hold from './Hold'
 import Redirect404 from './Redirect404'
 import StringUtils from '../util/StringUtils'

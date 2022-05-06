@@ -29,7 +29,7 @@ export default function CurdDemo(props) {
     }, [data])
     let Curd = found ? <Hold /> : <Redirect404 />;
     if (!StringUtils.isEmpty(modules)) {
-        Curd = (<DynamicCurd modules={modules}
+        Curd = (<DynamicCurd modules={modules} params={modules.params}
             actions={[
                 <Button icon={<SwapOutlined />} onClick={() => setVisible(true)}>编辑modules数据</Button>
             ]}

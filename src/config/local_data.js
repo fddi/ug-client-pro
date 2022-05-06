@@ -1,6 +1,7 @@
 import fetchTo from '../util/FetchTo'
 import { getAuthInfo } from './client'
 export default async function getLocalData(url, params) {
+    console.log(JSON.stringify(params))
     return fetchTo(fetch(url, {
         method: 'GET',
         mode: 'cors',
@@ -13,7 +14,16 @@ export default async function getLocalData(url, params) {
         .then(result => {
             if (url.indexOf('dict') > 0) {
                 const data = searchDict(params, result.resultData)
-                return data
+                const table = params.table;
+                if (table && data) {
+                    result.resultData = {};
+                    result.resultData.content = data
+                    result.resultData.totalElements = data.length
+                } else {
+                    result.resultData = data;
+                }
+                console.log(result)
+                return result
             }
             return result
         })

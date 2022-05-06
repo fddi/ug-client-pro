@@ -5,13 +5,13 @@ import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
-function queryData(catalog, dictCode) {
+async function queryData(catalog, dictCode) {
     if (StringUtils.isEmpty(catalog) || catalog === "icon" || catalog === "TF") {
         return new Promise((resolve) => {
             resolve(null);
         });
     }
-    return post('data/dict.json', { catalog, dictCode})
+    return post('data/dict.json', { catalog, dictCode }).then(result => result.resultData)
 }
 
 export default function AsyncSelect(props) {
@@ -51,7 +51,7 @@ export default function AsyncSelect(props) {
                 break;
             default:
                 data && data.forEach((item) => {
-                    itemComs.push((<Select.Option value={item.value}
+                    itemComs.push((<Select.Option value={item.key}
                         key={"ds-" + item.id}>{item.title}</Select.Option>));
                 })
                 break;

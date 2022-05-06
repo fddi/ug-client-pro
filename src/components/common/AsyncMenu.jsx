@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Menu, } from 'antd';
-import { MenuOutlined, } from '@ant-design/icons';
+import { Menu } from 'antd';
 import { post } from "../../config/client";
-import StringUtils from '../../util/StringUtils';
 import { useRequest } from 'ahooks';
 
-async function queryData(modules, params) {
-    return post(modules.queryApi, { parentKey: 0, ...params }).then((result) => {
+async function queryData(modules) {
+    return post(modules.queryApi, { parentKey: 0, ...modules.params }).then((result) => {
         if (result && 200 === result.resultCode) {
             result.resultData && (result.resultData[0].selected = true);
             return result.resultData;
@@ -21,18 +19,12 @@ async function queryData(modules, params) {
  * **/
 export default function AsyncMenu(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
-    const { modules, params, refreshTime, handleClick } = props;
-    const { data } = useRequest(() => queryData(modules, params),
+    const { modules, refreshTime, handleClick } = props;
+    const { data } = useRequest(() => queryData(modules),
         {
             loadingDelay: 1000,
-            refreshDeps: [params, refreshTime]
+            refreshDeps: [modules, refreshTime]
         });
-
-    const key = StringUtils.isEmpty(modules.key) ? "key" : modules.key;
-    // if (data && data[0].selected === true) {
-    //     setSelectedKeys(["menu-tag-" + data[0][key]])
-    //     handleClick && handleClick(data[0])
-    // }
 
     function handleSelect(e) {
         setSelectedKeys(e.selectedKeys)
