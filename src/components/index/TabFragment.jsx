@@ -89,7 +89,7 @@ export default function TabFragment(props) {
             if (!TabPage) {
                 TabPage = findRoute(item)
             }
-            const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.title}</span>)}
+            const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.label}</span>)}
                 key={"tab-main-" + item.key} closable={true}
                 style={{ height: '86vh', overflowY: "auto", overflowX: "hidden", }}>
                 <TabProvider addTabPage={addTabPage}
@@ -179,7 +179,7 @@ export default function TabFragment(props) {
         >
             <TabPane tab={(<span style={{ userSelect: 'none', }}>工作台</span>)}
                 key="tab-main-default" closable={false}
-                style={{ height: '100vh', overflowY: "auto", overflowX: "hidden" }}>
+                style={{ height: '86vh', overflowY: "auto", overflowX: "hidden" }}>
                 <Workbench addTabPage={addTabPage} />
             </TabPane>
             {renderTabPanes(pages)}

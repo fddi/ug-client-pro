@@ -290,28 +290,30 @@ export default function DynamicForm(props) {
     const handleMenuClick = (e) => {
         switch (e.key) {
             case "1":
-                handleDel();
+                handleReset()
                 break;
             case "2":
+                handleDel();
                 break;
             default:
                 break;
         }
     }
 
+    const items = [{ key: "1", icon: <ReloadOutlined />, label: "重置" },
+    { key: "2", icon: <DeleteOutlined />, label: "删除" }];
     const saveDisabled = props.modules.saveDisabled ? props.modules.saveDisabled : false;
     const delDisabled = props.modules.delDisabled ? props.modules.delDisabled : false;
+    delDisabled && items.pop();
     const Save = add ? (<Button icon={<PlusOutlined />} onClick={onFinish} type="primary" danger>增加</Button>)
         : (<Button icon={<CheckOutlined />} onClick={onFinish} type="primary">保存</Button>)
     const extra = (
         <Space>
             {saveDisabled ? (null) : Save}
-            <Dropdown overlay={(<Menu onClick={handleMenuClick}>
-                <Menu.Item key="2" icon={<ReloadOutlined />}
-                    onClick={handleReset} >重置</Menu.Item>
-                {delDisabled ? (null) :
-                    (<Menu.Item key="1" icon={<DeleteOutlined />} > 删除 </Menu.Item>)}
-            </Menu>)}>
+            <Dropdown overlay={(<Menu
+                onClick={handleMenuClick}
+                items={items}
+            />)}>
                 <Button>
                     更多<DownOutlined />
                 </Button>

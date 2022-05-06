@@ -34,18 +34,6 @@ export default function AsyncMenu(props) {
     //     handleClick && handleClick(data[0])
     // }
 
-    function renderMenuItem(items) {
-        const itemComs = [];
-        const title = StringUtils.isEmpty(modules.title) ? "请添加标题.." : modules.title;
-        items && items.forEach(item => {
-            itemComs.push((<Menu.Item key={"menu-tag-" + item.key} >
-                <MenuOutlined />
-                <span className="nav-text">{item.title}</span>
-            </Menu.Item>));
-        });
-        return itemComs;
-    }
-
     function handleSelect(e) {
         setSelectedKeys(e.selectedKeys)
         handleClick && handleClick(e.item.props.menu)
@@ -56,8 +44,7 @@ export default function AsyncMenu(props) {
             selectedKeys={selectedKeys}
             onSelect={handleSelect}
             style={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}
-        >
-            {renderMenuItem(data)}
-        </Menu>
+            items={data}
+        />
     );
 }

@@ -15,10 +15,10 @@ const { Header, Content, Sider } = Layout
 let menuTree;
 let menuList = []
 async function queryData(localSearch, key) {
-    if (localSearch && menuTree.top) {
-        for (let i = 0; i < menuTree.top.length; i++) {
-            if (key === "menu-top-" + menuTree.top[i].key) {
-                menuTree.left = menuTree.top[i].children;
+    if (localSearch && menuTree.all) {
+        for (let i = 0; i < menuTree.all.length; i++) {
+            if (key == menuTree.all[i].key) {
+                menuTree.left = menuTree.all[i].children;
                 break;
             }
         }
@@ -30,13 +30,19 @@ async function queryData(localSearch, key) {
     }
     return post('data/menu.json').then((result) => {
         if (result && result.resultCode === 200) {
-            const menu1 = result.resultData.children;
+            const data = result.resultData.children;
+            let menu1 = JSON.stringify(data);
+            menu1 = JSON.parse(menu1);
+            menu1 = menu1.map(item => {
+                item.children = null;
+                return item;
+            })
             let menu2 = [];
-            if (!StringUtils.isEmpty(menu1) && menu1.length > 0) {
-                menu2 = menu1[0].children;
+            if (!StringUtils.isEmpty(data) && data.length > 0) {
+                menu2 = data[0].children;
             }
-            menuTree = { top: menu1, left: menu2 };
-            ArrayUtils.treeToArray({ key: 0, children: menu1 }, menuList);
+            menuTree = { all: data, top: menu1, left: menu2 };
+            ArrayUtils.treeToArray({ key: 0, children: data }, menuList);
         }
         return menuTree;
     })
@@ -58,12 +64,12 @@ export default function Index() {
         }
     }
 
+    function onTopMenuSelect(e) {
+        run(true, e.key);
+    }
+
     function onSelect(e) {
-        if (e.key.indexOf("menu-top-") >= 0) {
-            run(true, e.key);
-        }
-        const menu = menuList.find(
-            item => (("menu-tree-" + item.key) === e.key || ("menu-top-" + item.key) === e.key));
+        const menu = menuList.find(item => item.key == e.key);
         setActiveMenu(menu)
     }
 
@@ -97,7 +103,7 @@ export default function Index() {
             <Layout>
                 <Header className="header">
                     <MainHeader nickName={`demo`} linkToLogin={linkToLogin}
-                        menus={data && data.top} onSelect={onSelect} />
+                        menus={data && data.top} onSelect={onTopMenuSelect} />
                 </Header>
                 <Content className="content">
                     <TabFragment activeMenu={activeMenu} onChange={onChange} />

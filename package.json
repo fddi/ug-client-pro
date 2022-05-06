@@ -8,7 +8,7 @@
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "ahooks": "^3.1.5",
-    "antd": "^4.19.5",
+    "antd": "^4.20.2",
     "antd-img-crop": "^4.2.3",
     "craco-less": "^2.0.0",
     "crypto-js": "^4.1.1",
@@ -16,9 +16,9 @@
     "qiankun": "^2.7.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-json-view": "^1.21.3",
+    "react-json-view": "latest",
     "react-loadable": "^5.5.0",
-    "react-router-dom": "^6.2.1",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0"
   },
   "scripts": {

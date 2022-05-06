@@ -2,79 +2,69 @@
     "resultCode": 200,
     "resultData": {
         "key": 0,
-        "title": "根节点",
+        "label": "根节点",
         "children": [
             {
                 "children": [
                     {
                         "key": 11,
-                        "title": "Iframe方式",
+                        "label": "Iframe方式",
                         "value": "",
-                        "icon": "BarsOutlined",
                         "children": [
                             {
                                 "key": 111,
-                                "title": "Iframe页面1",
+                                "label": "Iframe页面1",
                                 "value": "http://cn.bing.com",
-                                "icon": "BarsOutlined",
                                 "type": "2"
                             },
                             {
                                 "key": 112,
-                                "title": "Iframe页面2",
+                                "label": "Iframe页面2",
                                 "value": "https://reactjs.org/",
-                                "icon": "BarsOutlined",
                                 "type": "2"
                             }
                         ]
                     },
                     {
                         "key": 12,
-                        "title": "微前端方式",
+                        "label": "微前端方式",
                         "value": "",
-                        "icon": "BarsOutlined",
                         "children": [
                             {
                                 "key": 121,
-                                "title": "微前端1",
+                                "label": "微前端1",
                                 "value": "http://localhost:3001/",
-                                "icon": "BarsOutlined",
                                 "type": "3"
                             },
                             {
                                 "key": 122,
-                                "title": "微前端2",
+                                "label": "微前端2",
                                 "value": "http://localhost:3001/",
-                                "icon": "BarsOutlined",
                                 "type": "3"
                             }
                         ]
                     }
                 ],
                 "key": 1,
-                "title": "远程调用",
-                "value": "",
-                "icon": "BarsOutlined"
+                "label": "远程调用",
+                "value": ""
             },
             {
                 "children": [
                     {
                         "key": 21,
-                        "title": "动态表单",
-                        "value": "/index/dynamic?formCode=1",
-                        "icon": "BarsOutlined"
+                        "label": "动态表单",
+                        "value": "/index/dynamic?formCode=1"
                     },
                     {
                         "key": 22,
-                        "title": "CURD组合",
-                        "value": "/index/curd",
-                        "icon": "BarsOutlined"
+                        "label": "CURD组合",
+                        "value": "/index/curd"
                     }
                 ],
                 "key": 2,
-                "title": "动态表单",
-                "value": "",
-                "icon": "BarsOutlined"
+                "label": "动态表单",
+                "value": ""
             }
         ]
     },

@@ -2,14 +2,15 @@
     "resultCode": 200,
     "resultData": {
         "formMapper": {
-            "title": "地区代码",
+            "title": "示例",
             "rowKey": "id",
-            "searchKey": "name",
+            "searchKey": "title",
             "saveApi": "data/success.json",
             "delApi": "data/success.json",
             "findApi": "data/success.json",
-            "queryApi": "data/query.json",
+            "queryApi": "",
             "dragDropApi": "",
+            "dataType": "tree",
             "params": {
                 "parentId": 0
             },

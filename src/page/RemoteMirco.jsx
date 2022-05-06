@@ -30,7 +30,7 @@ export default function RemoteMirco(props) {
           }
      })
      return (
-          <div style={{ border: 'none', height: '88vh', width: '100%' }}
+          <div style={{ border: 'none', height: '86%', width: '100%' }}
                id={`container-${props.item.key}`}>
                <Hold />
           </div>

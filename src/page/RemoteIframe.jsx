@@ -22,7 +22,7 @@ export default function RemoteIframe(props) {
           <Fragment>
                {(data && data.publishUri) ? (<iframe
                     src={data.publishUri} title={data.title}
-                    style={{ border: 'none', height: '88vh', width: '100%' }}></iframe>) : (<Redirect404 />)}
+                    style={{ border: 'none', height: '85%', width: '100%' }}></iframe>) : (<Redirect404 />)}
           </Fragment>
      );
 }
