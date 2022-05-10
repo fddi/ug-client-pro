@@ -20,7 +20,7 @@ export default function Login(props) {
     return (
         <Layout className="content-wrapper">
             <Row className='login-main'>
-                <Col xs={0} sm={12}
+                <Col  xs={0} sm={0} md={12}
                     className='left-info' >
                     <h2 className="slogan">
                         欢迎使用<br />{APPNMAE}
