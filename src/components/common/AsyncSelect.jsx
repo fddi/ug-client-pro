@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Select, } from 'antd';
-import { icons, } from '../common/PreIcon';
 import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
+import * as Icons from "react-icons/bi";
+import { faIcon } from './IconText';
 
 async function queryData(catalog, dictCode) {
     if (StringUtils.isEmpty(catalog) || catalog === "icon" || catalog === "TF") {
@@ -40,9 +41,9 @@ export default function AsyncSelect(props) {
             case "icon":
                 itemComs.push((<Select.Option value='' key={"icon-nvl"}>
                     无</Select.Option>));
-                Object.keys(icons).forEach(item => {
+                Object.keys(Icons).forEach(item => {
                     itemComs.push((<Select.Option value={item} key={"icon-" + item}>
-                        {React.createElement(icons[item])}</Select.Option>));
+                        {<span style={{ fontSize: 16 }}>{faIcon({ name: item })}{item}</span>}</Select.Option>));
                 });
                 break;
             case "TF":
