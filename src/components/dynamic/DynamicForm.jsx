@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spin, Form, Button, Modal, Card, message, Space, Dropdown, Menu, Row } from 'antd';
-import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined, } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, CheckOutlined, DownOutlined, FormOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { post } from "../../config/client";
 import { lag } from "../../config/lag";
@@ -17,9 +17,11 @@ async function queryData(modules, row) {
         });
     }
     const rowkey = modules.rowKey || modules.columns[0].dataIndex;
-    const v = row[rowkey] || row['key'];
+    const v = row[rowkey] || row['id'];
     if (!StringUtils.isEmpty(modules.findOneApi) && !StringUtils.isEmpty(v)) {
-        return post(modules.queryApi, modules.params).then((result) => result.resultData);
+        const params = {};
+        params[rowkey] = v
+        return post(modules.findOneApi, params).then((result) => result.resultData);
     }
     return new Promise((resolve) => {
         resolve(null);
@@ -57,28 +59,34 @@ export default function DynamicForm(props) {
     }, [props.modules]);
     //选中项变更
     useUpdateEffect(() => {
-        if (!StringUtils.isEmpty(props.row)) {
-            setInsert(false)
-        }
-        reset(props.modules, props.row)
+        setInsert(StringUtils.isEmpty(props.row))
+        reset(props.modules, props.row, props.extraItem)
     }, [props.modules, props.row]);
     //查询返回值变更
     useUpdateEffect(() => {
-        if (!StringUtils.isEmpty(data)) {
-            setInsert(false)
-
-        }
-        reset(props.modules, data);
+        setInsert(StringUtils.isEmpty(data))
+        reset(props.modules, data, props.extraItem);
     }, [props.modules, data])
+    //额外项选择变更
+    useUpdateEffect(() => {
+        setInsert(true)
+        reset(props.modules, null, props.extraItem);
+    }, [props.modules, props.extraItem])
     //重置表单数据
     useUpdateEffect(() => {
         form.resetFields();
     }, [form, item])
 
-    function reset(modules, item) {
+    function reset(modules, item, extraItem) {
         if (StringUtils.isEmpty(item)) {
             item = {};
             item['parentId'] = "0"
+        }
+        if (!StringUtils.isEmpty(modules.extra) && !StringUtils.isEmpty(extraItem)) {
+            const key = StringUtils.isEmpty(modules.extra.rowKey) ? "key" : modules.extra.rowKey;
+            const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
+            //额外项保存
+            item[searchKey] = extraItem[key];
         }
         item.refreshTime = new Date().getTime();
         modules.columns.forEach(col => {
@@ -210,9 +218,13 @@ export default function DynamicForm(props) {
                     if (result && 200 === result.resultCode) {
                         message.success(result.resultMsg);
                         onFinish && onFinish();
+                        reset(props.modules, null, props.extraItem);
                     } else {
                         const msg = result ? result.resultMsg : lag.errorNetwork;
-                        message.error(msg)
+                        Modal.error({
+                            title: '操作失败',
+                            content: result.resultMsg,
+                        });
                     }
                 })
             } else {
@@ -223,7 +235,10 @@ export default function DynamicForm(props) {
                         onFinish && onFinish();
                     } else {
                         const msg = result ? result.resultMsg : lag.errorNetwork;
-                        message.error(msg)
+                        Modal.error({
+                            title: '操作失败',
+                            content: result.resultMsg,
+                        });
                     }
                 })
             }
@@ -234,21 +249,14 @@ export default function DynamicForm(props) {
         const { modules } = props;
         const rowKey = modules.rowKey || modules.columns[0].dataIndex;
         const initItem = {};
-        if (modules.type === "tree") initItem['parentId'] = "0"
+        initItem['parentId'] = "0"
         if (!StringUtils.isEmpty(item)) {
             //新增时默认选中项为父项
             initItem['parentId'] = item[rowKey] || "0";
-            initItem['unitCode'] = item['unitCode'] || "";
-            if (!StringUtils.isEmpty(modules.extra)) {
-                const key = StringUtils.isEmpty(modules.extra.key) ? "key" : modules.extra.key;
-                const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
-                //额外项保存
-                initItem[searchKey] = item[key];
-            }
         }
         props.onReset && props.onReset()
         setInsert(true);
-        reset(modules, initItem);
+        reset(modules, initItem, props.extraItem);
     }
 
     const handleDel = () => {
@@ -289,8 +297,12 @@ export default function DynamicForm(props) {
             if (200 === result.resultCode) {
                 message.success(result.resultMsg);
                 onFinish();
+                reset(props.modules, null, props.extraItem);
             } else {
-                message.error(result.resultMsg);
+                Modal.error({
+                    title: '操作失败',
+                    content: result.resultMsg,
+                });
             }
             setSpinning(false)
         });
@@ -334,6 +346,10 @@ export default function DynamicForm(props) {
                 <Card
                     bodyStyle={{ padding: 6, }}
                     extra={extra}
+                    title={
+                        <Space style={{ color: '#1890ff' }}>
+                            <FormOutlined /><span>{props.modules.title}</span>
+                        </Space>}
                 >
                     <Form
                         labelAlign='right'

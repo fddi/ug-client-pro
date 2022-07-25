@@ -1,6 +1,6 @@
 
 import StringUtils from "./StringUtils";
-import hmacSHA256 from 'crypto-js/hmac-sha256';
+import CryptoJS from 'crypto-js';
 
 // json to formData
 export const jsonToFormData = (json) => {
@@ -56,8 +56,15 @@ export const objToParamsStr = function (obj) {
 }
 
 export const signData = function (paramsStr, key) {
-  const data = paramsStr + "&key=" + key;
-  return hmacSHA256(data, key);
+  let data;
+  if (StringUtils.isEmpty(paramsStr)) {
+    data = "key=" + key;
+  } else {
+    data = paramsStr + "&key=" + key;
+  }
+  let enStr = CryptoJS.HmacSHA256(data, key);
+  enStr = CryptoJS.enc.Base64.stringify(enStr)
+  return enStr;
 }
 
 export default function fetchTo(fetch_promise, timeout) {

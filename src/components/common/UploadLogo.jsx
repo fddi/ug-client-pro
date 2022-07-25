@@ -18,7 +18,7 @@ export default function UploadLogo(props) {
      }, [props.url])
 
      const beforeUpload = async (file) => {
-          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
           if (!isJpgOrPng) {
                message.error(lag.alertImgType);
                return false;

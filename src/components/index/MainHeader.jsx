@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Badge, Col, Menu, Row, } from 'antd';
-import { UserOutlined, PoweroffOutlined, MessageOutlined, } from '@ant-design/icons'
+import { PoweroffOutlined, MessageOutlined, } from '@ant-design/icons'
 
 export default function HeaderView(props) {
+     const [menus, setMenus] = useState();
      const [selectedKeys, setSelectedKeys] = useState([]);
 
      useEffect(() => {
@@ -10,6 +11,14 @@ export default function HeaderView(props) {
                let sk = [props.menus[0].key + ""];
                setSelectedKeys(sk);
           }
+          const newMenus = []
+          props.menus && props.menus.forEach(item => {
+               if (item.type != '5') {
+                    delete item.parentId;
+                    newMenus.push(item)
+               }
+          })
+          setMenus(newMenus)
      }, [props.menus])
 
      function handleMenuSelect(e) {
@@ -19,7 +28,6 @@ export default function HeaderView(props) {
                case 102:
                     break;
                case 103:
-                    props.linkToLogin && props.linkToLogin();
                     break;
                default:
                     setSelectedKeys(e.selectedKeys)
@@ -35,7 +43,7 @@ export default function HeaderView(props) {
                case 102:
                     break;
                case 103:
-                    props.linkToLogin && props.linkToLogin();
+                    props.logout && props.logout();
                     break;
                default:
                     break;
@@ -52,7 +60,7 @@ export default function HeaderView(props) {
                          style={{ lineHeight: '64px' }}
                          selectedKeys={selectedKeys}
                          onSelect={handleMenuSelect}
-                         items={props.menus}
+                         items={menus}
                     /></Col>
                <Col flex="120px">
                     <Menu
@@ -64,7 +72,7 @@ export default function HeaderView(props) {
                          onSelect={handleMenuSelect}
                          onClick={handleMenuClick}
                          items={[{
-                              label: (<Badge count={2} size='small'>
+                              label: (<Badge count={0} size='small'>
                                    <MessageOutlined />
                               </Badge>),
                               key: '101'
@@ -72,10 +80,6 @@ export default function HeaderView(props) {
                               label: props.nickName,
                               key: "header-sm-1",
                               children: [{
-                                   label: '个人中心',
-                                   key: "102",
-                                   icon: <UserOutlined />
-                              }, {
                                    label: '退出登录',
                                    key: "103",
                                    icon: <PoweroffOutlined />

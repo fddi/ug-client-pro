@@ -25,7 +25,7 @@ function searchTree(value) {
             selectItems.push(item)
         }
     }
-    let root = null;
+    let root = [];
     if (selectItems.length > 0) {
         root = selectItems;
     }
@@ -38,8 +38,13 @@ async function queryData(modules, extraItem, localSearch, v) {
             resolve(searchTree(v));
         });
     }
-    let params = modules.params;
-    if (!StringUtils.isEmpty(modules.extra) && !StringUtils.isEmpty(extraItem)) {
+    let params = {
+        ...modules.params
+    };
+    if (!StringUtils.isEmpty(modules.extra)) {
+        if (StringUtils.isEmpty(extraItem)) {
+            return []
+        }
         const key = modules.extra.rowKey;
         const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
         params[searchKey] = extraItem[key]
@@ -47,11 +52,16 @@ async function queryData(modules, extraItem, localSearch, v) {
     return post(modules.queryApi, params).then((result) => {
         if (result && 200 === result.resultCode) {
             const root = result.resultData;
-            allRoot = result.resultData;
-            ArrayUtils.treeToArray({ key: 0, children: root }, dataList);
-            return root;
+            ArrayUtils.treeToArray(root, dataList);
+            if (root && root.id == '0') {
+                allRoot = root.children || [];
+                return root.children || [];
+            } else {
+                allRoot = root ? [root] : [];
+                return root ? [root] : []
+            }
         } else {
-            return null;
+            return [];
         }
     });
 }
@@ -61,36 +71,39 @@ async function queryData(modules, extraItem, localSearch, v) {
  * **/
 export default function AsyncTree(props) {
     const [selectedKeys, setSelectedKeys] = useState([]);
-    const [expandedKeys, setExpandedKeys] = useState([]);
     const { modules, extraItem, refreshTime } = props;
     const { data, run, } = useRequest(queryData,
         {
             loadingDelay: 1000,
+            manual: !StringUtils.isEmpty(modules.extra),
             defaultParams: [modules]
         });
     useUpdateEffect(() => {
         run(modules, extraItem)
     }, [modules, extraItem, refreshTime])
+    useUpdateEffect(() => {
+        setSelectedKeys([])
+    }, [extraItem])
 
     const handleSelect = (keys, e) => {
         const { handleSelect } = props;
         if (StringUtils.isEmpty(keys) || keys.length === 0) {
             handleSelect && handleSelect(null);
         } else {
-            const item = e.node;
-            if (!StringUtils.isEmpty(item.key) && item.key != 0) {
-                handleSelect && handleSelect(item);
+            if (modules.selectType == 'checkbox') {
+                handleSelect && handleSelect(keys);
+            } else {
+                const item = e.node;
+                if (!StringUtils.isEmpty(item.key) && item.key != 0) {
+                    handleSelect && handleSelect(item);
+                }
             }
         }
         setSelectedKeys(keys)
     }
 
-    const onExpand = expandedKeys => {
-        setExpandedKeys(expandedKeys)
-    };
-
     const onChange = e => {
-        setSelectedKeys([]); setExpandedKeys([]);
+        setSelectedKeys([]);
         const { value } = e.target;
         run(modules, extraItem, true, value);
     };
@@ -114,11 +127,11 @@ export default function AsyncTree(props) {
             dropId
         }).then((result) => {
             if (result && 200 === result.resultCode) {
-                run(modules);
+                run(modules, extraItem)
             }
         })
     }
-    const height = window.innerHeight - 190;
+    const height = window.innerHeight - 208;
     return (
         <Fragment>
             <Input.Search
@@ -126,18 +139,17 @@ export default function AsyncTree(props) {
                 style={{ marginBottom: 5 }}
                 onChange={onChange} />
             <Tree
-                expandAction={false}
+                style={props.style}
                 height={height}
                 onSelect={handleSelect}
                 showLine={true}
                 selectedKeys={selectedKeys}
-                onExpand={onExpand}
-                expandedKeys={expandedKeys}
                 autoExpandParent={true}
                 draggable
                 onDrop={onDrop}
                 blockNode={true}
                 treeData={data}
+                checkable={modules.selectType == 'checkbox'}
                 titleRender={(nodeData) => {
                     let title = nodeData.title;
                     if (modules.showVal) {

@@ -6,19 +6,33 @@ import { useAntdTable, useUpdateEffect } from 'ahooks';
 async function queryData({ current, pageSize }, formData, modules, extraItem) {
     const addParams = {
         pageSize: pageSize,
-        pageNo: current,
+        pageNo: current - 1,
         ...modules.params,
         ...formData
     }
-    if (!StringUtils.isEmpty(modules.extra) && !StringUtils.isEmpty(extraItem)) {
+    if (!StringUtils.isEmpty(modules.extra)) {
+        if (StringUtils.isEmpty(extraItem)) {
+            return {
+                total: 0,
+                list: []
+            }
+        }
         const key = modules.extra.rowKey;
         const searchKey = StringUtils.isEmpty(modules.extra.searchKey) ? key : modules.extra.searchKey;
         addParams[searchKey] = extraItem[key]
     }
-    return post(modules.queryApi, addParams).then((result) => ({
-        total: result.resultData && result.resultData.totalElements,
-        list: result.resultData && result.resultData.content,
-    }));
+    return post(modules.queryApi, addParams).then((result) => {
+        if (modules.pageable === false) {
+            return {
+                list: result.resultData && result.resultData,
+            }
+        } else {
+            return {
+                total: result.resultData && result.resultData.totalElements,
+                list: result.resultData && result.resultData.content,
+            }
+        }
+    });
 }
 
 function filterCols(columns) {
@@ -52,31 +66,43 @@ export default function AsyncTable(props) {
     });
     useUpdateEffect(() => {
         search.submit();
+        setKeys([])
     }, [modules, extraItem, props.refreshTime])
+    useUpdateEffect(() => {
+        setKeys([])
+    }, [extraItem])
+    if (StringUtils.isEmpty(props.modules)) {
+        return null;
+    }
 
     function onSelect(selectedRowKeys, row) {
         const { handleSelect } = props;
         setKeys(selectedRowKeys)
-        handleSelect && handleSelect(row);
+        if (modules.selectType == 'checkbox') {
+            handleSelect && handleSelect(selectedRowKeys);
+        } else {
+            handleSelect && handleSelect(row);
+        }
     }
 
     const searchBar = (
         <Form form={form}>
-            <Form.Item name={modules.searchKey} noStyle>
-                <Input.Search
-                    style={{ marginBottom: 5 }} allowClear
-                    onSearch={search.submit} />
-            </Form.Item>
+            {StringUtils.isEmpty(modules.searchKey) ? null :
+                (<Form.Item name={modules.searchKey} noStyle>
+                    <Input.Search
+                        style={{ marginBottom: 5 }} allowClear
+                        onSearch={search.submit} />
+                </Form.Item>)}
         </Form>);
-    const header = StringUtils.isEmpty(modules.searchKey) ? null : searchBar;
+    const pageProp = modules.pageable === false ? { pagination: false } : null;
     return (
-        <Card bordered={false} size='small' title={header}
-        >
+        <Card bordered={false} size='small'>
+            {searchBar}
             <Table
                 style={{ ...props.style }}
                 size="small"
                 columns={filterCols(modules.columns)}
-                rowKey={modules.key}
+                rowKey={modules.rowKey}
                 onRow={record => {
                     if (modules.selectType === 'checkbox') {
                         return null;
@@ -94,6 +120,7 @@ export default function AsyncTable(props) {
                     onChange: (selectedRowKeys, rows) => { onSelect(selectedRowKeys, rows && rows[0]) }
                 }}
                 {...tableProps}
+                {...pageProp}
             />
         </Card>
     );

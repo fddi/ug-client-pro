@@ -73,7 +73,7 @@ export default function Index() {
         setActiveMenu(menu)
     }
 
-    function linkToLogin() {
+    function logout() {
         sessionStorage.clear();
         setJump(true)
     }
@@ -102,7 +102,7 @@ export default function Index() {
             </Sider>
             <Layout>
                 <Header className="header">
-                    <MainHeader nickName={`demo`} linkToLogin={linkToLogin}
+                    <MainHeader nickName={`demo`} logout={logout}
                         menus={data && data.top} onSelect={onTopMenuSelect} />
                 </Header>
                 <Content className="content">

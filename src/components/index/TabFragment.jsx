@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tabs, Popconfirm } from 'antd';
+import { Button, Tabs, Popconfirm, Card } from 'antd';
 import { ClearOutlined } from '@ant-design/icons'
 import Loadable from 'react-loadable'
 import Workbench from '../../page/WorkBench'
@@ -17,6 +17,12 @@ export default function TabFragment(props) {
     const [pages, setPages] = useState([]);
     const [activeKey, setActiveKey] = useState();
     const [popVisible, setPopVisible] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            clearTabs()
+        }
+    }, [])
 
     useEffect(() => {
         addMenu(props.activeMenu)
@@ -91,9 +97,10 @@ export default function TabFragment(props) {
             }
             const pane = (<TabPane tab={(<span style={{ userSelect: 'none', }}>{item.label}</span>)}
                 key={"tab-main-" + item.key} closable={true}
-                style={{ height: 'calc(100vh - 100px)', overflowY: "auto", overflowX: "hidden", }}>
+                style={{overflowY: "auto", overflowX: "hidden", }}>
                 <TabProvider addTabPage={addTabPage}
                     removeTabPage={removeTabPage} >
+                    <Card bordered={false} bodyStyle={{ padding: 2 }} />
                     <TabPage item={item} />
                 </TabProvider>
             </TabPane>);
@@ -179,7 +186,8 @@ export default function TabFragment(props) {
         >
             <TabPane tab={(<span style={{ userSelect: 'none', }}>工作台</span>)}
                 key="tab-main-default" closable={false}
-                style={{ height: 'calc(100vh - 100px)', overflowY: "auto", overflowX: "hidden" }}>
+                style={{ height: 'calc(100vh - 110px)', overflowY: "auto", overflowX: "hidden" }}>
+                <Card bordered={false} bodyStyle={{ padding: 2 }} />
                 <Workbench addTabPage={addTabPage} />
             </TabPane>
             {renderTabPanes(pages)}

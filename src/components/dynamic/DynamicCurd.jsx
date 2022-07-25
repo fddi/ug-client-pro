@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Row, Col, Button, Space, Card } from 'antd';
 import { ReloadOutlined, } from '@ant-design/icons';
 import DynamicForm from './DynamicForm';
@@ -6,6 +6,7 @@ import StringUtils from '../../util/StringUtils';
 import AsyncTable from '../common/AsyncTable';
 import AsyncTree from '../common/AsyncTree';
 import AsyncMenu from '../common/AsyncMenu';
+import { useUpdateEffect } from 'ahooks';
 /**
  * 动态CURD界面
  * 
@@ -14,7 +15,7 @@ export default function DynamicCurd(props) {
     const [extraItem, setExtraItem] = useState();
     const [row, setRow] = useState();
     const [refreshTime, setRefreshTime] = useState(new Date().getTime());
-    useEffect(() => {
+    useUpdateEffect(() => {
         props.refreshTime && setRefreshTime(props.refreshTime)
     }, [props.refreshTime])
     if (StringUtils.isEmpty(props.modules)) {
@@ -48,7 +49,10 @@ export default function DynamicCurd(props) {
         switch (modules.extra.type) {
             case "tree":
                 Extra = (
-                    <Col span={5} style={{ height: '100%', overflowY: 'auto' }}>
+                    <Col span={5} style={{
+                        height: '100%', overflowY: 'auto',
+                        backgroundColor: '#fff', borderRight: "1px solid #f2f2f2",
+                    }}>
                         <AsyncTree modules={modules.extra} refreshTime={refreshTime}
                             handleSelect={handleExtraSelect} />
                     </Col>);
@@ -70,7 +74,7 @@ export default function DynamicCurd(props) {
         //数据展示控件 支持树和表格
         case "tree":
             TreeData = (
-                <Col span={6}>
+                <Col span={6} style={{ backgroundColor: '#fff' }}>
                     <AsyncTree modules={modules} refreshTime={refreshTime}
                         extraItem={extraItem} handleSelect={onRowSelect} />
                 </Col>);
@@ -101,13 +105,13 @@ export default function DynamicCurd(props) {
                 </Space>
             </Card>
             <Row gutter={[8, 8]} style={{
-                height: 'calc(100vh - 155px)', ...props.style
+                height: 'calc(100vh - 170px)', ...props.style
             }}>
                 {Extra}
                 {TreeData}
                 <Col span={spanForm} style={{ height: '100%', overflowY: "auto" }}>
                     {TableData}
-                    <DynamicForm modules={modules} row={row} onFinish={onFinish} />
+                    <DynamicForm modules={modules} row={row} onFinish={onFinish} extraItem={extraItem} />
                 </Col>
             </Row>
         </Fragment>

@@ -12,9 +12,10 @@ const itemStyle = {
 }
 const layout = {
     xs: 24,
-    sm: 12,
-    lg: 8,
-    xl: 6
+    sm: 24,
+    lg: 12,
+    xl: 8,
+    xxl: 6
 }
 
 const checkDisabled = (item, data) => {

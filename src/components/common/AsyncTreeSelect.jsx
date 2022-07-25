@@ -5,8 +5,19 @@ import { useRequest, useUpdateEffect } from 'ahooks';
 
 export default function AsyncTreeSelect(props) {
     const [value, setValue] = useState(props.value || '');
-    const { data } = useRequest(() => post('data/dict.json',
-        { catalog: props.catalog, dictCode: props.dictCode }).then(result => result.resultData),
+    const { data } = useRequest(() => post('data/dict-tree.json',
+        { catalog: props.catalog, dictCode: props.dictCode }).then(result => {
+            if (200 === result.resultCode) {
+                const root = result.resultData;
+                if (root && root.id == '0') {
+                    return root.children || [];
+                } else {
+                    return root ? [root] : []
+                }
+            } else {
+                return [];
+            }
+        }),
         {
             loadingDelay: 1000,
             refreshDeps: [props.catalog, props.dictCode]
@@ -21,7 +32,6 @@ export default function AsyncTreeSelect(props) {
     }
 
     const defaultStyle = {
-        width: '100%',
     }
     const autoFocus = props.autoFocus ? true : false;
     return (

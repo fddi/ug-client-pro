@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import * as Icons from "react-icons/bi";
 
 export const faIcon = (props) => {
+    if (props.name == null || Icons[props.name] == null) {
+        return null;
+    }
     return React.createElement(Icons[props.name],
         { style: { ...props.style } });
 }

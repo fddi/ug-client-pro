@@ -15,7 +15,7 @@
                 "table": true
             },
             "extra": {
-                "queryApi": "data/dict.json",
+                "queryApi": "data/dict-tree.json",
                 "type": "tree",
                 "rowKey": "key",
                 "searchKey": "dictCode",
