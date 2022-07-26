@@ -32,17 +32,17 @@ npm run start
 ```
 - 登录界面
 
-<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u1.png" width="60%">
+<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u1.png" width="80%">
 
 - 管理平台
 
-<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u2.png" width="60%">
+<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u2.png" width="80%">
 
 - 动态表单
 
-<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u3.png" width="60%">
+<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u3.png" width="80%">
 
 - 动态CURD界面
 
-<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u4.png" width="60%">
+<img src="https://gitee.com/fddi/ug-client-pro/raw/master/docs/u4.png" width="80%">
 
