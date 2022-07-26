@@ -2,6 +2,7 @@ Low code front-end management platform scaffold.
 
 开箱即用的低代码前端管理平台脚手架。
 
+[GitHub](https://github.com/fddi/ug-client-pro)
 
 ## 项目特点
 - 提供一套管理平台界面方案，开箱即用。
