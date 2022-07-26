@@ -3,8 +3,8 @@ import { message, Tag, } from 'antd';
 import { post } from "../../config/client";
 import { useRequest, useUpdateEffect } from 'ahooks';
 
-async function queryData(catalog, dictCode) {
-    return post('data/dict.json', { catalog, dictCode }).then(result => {
+async function queryData(catalog, dictCode, queryApi) {
+    return post(queryApi || 'data/dict.json', { catalog, dictCode }).then(result => {
         if (result.resultCode == '200') {
             return result.resultData
         } else {
@@ -16,7 +16,7 @@ async function queryData(catalog, dictCode) {
 
 export default function AsyncTag(props) {
     const [tags, setTags] = useState(props.selectTags || []);
-    const { data } = useRequest(() => queryData(props.catalog, props.dictCode),
+    const { data } = useRequest(() => queryData(props.catalog, props.dictCode, props.queryApi),
         {
             loadingDelay: 1000,
             refreshDeps: [props.catalog, props.dictCode]

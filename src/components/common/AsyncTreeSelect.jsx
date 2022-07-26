@@ -5,7 +5,7 @@ import { useRequest, useUpdateEffect } from 'ahooks';
 
 export default function AsyncTreeSelect(props) {
     const [value, setValue] = useState(props.value || '');
-    const { data } = useRequest(() => post('data/dict-tree.json',
+    const { data } = useRequest(() => post(props.queryApi || 'data/dict-tree.json',
         { catalog: props.catalog, dictCode: props.dictCode }).then(result => {
             if (200 === result.resultCode) {
                 const root = result.resultData;

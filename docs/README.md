@@ -10,10 +10,6 @@ Low code front-end management platform scaffold.
 - 支持微前端架构：[qiankun](https://qiankun.umijs.org/)。
 - 使用react和ant-design。
 
-## 使用文档
-
-[查看文档](https://fddi.github.io/ug-client-pro/)。
-
 ## 快速开始
 
 ```bash
@@ -25,9 +21,9 @@ cd ug-client-pro
 npm install
 # 运行
 npm run start
-# 若需要测试微前端
+#### 若需要测试微前端
 cd ./mirco-app-test
-# 启动一个测试微前端
+#### 启动一个测试微前端
 npm run start
 ```
 - 登录界面

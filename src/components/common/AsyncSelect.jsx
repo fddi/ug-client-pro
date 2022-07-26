@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Select, } from 'antd';
 import StringUtils from '../../util/StringUtils';
 import { post } from "../../config/client";
@@ -6,18 +6,18 @@ import { useRequest, useUpdateEffect } from 'ahooks';
 import * as Icons from "react-icons/bi";
 import { faIcon } from './IconText';
 
-async function queryData(catalog, dictCode) {
+async function queryData(catalog, dictCode, queryApi) {
     if (StringUtils.isEmpty(catalog) || catalog === "icon" || catalog === "TF") {
         return new Promise((resolve) => {
             resolve(null);
         });
     }
-    return post('data/dict.json', { catalog, dictCode }).then(result => result.resultData)
+    return post(queryApi || 'data/dict.json', { catalog, dictCode }).then(result => result.resultData)
 }
 
 export default function AsyncSelect(props) {
     const [value, setValue] = useState(props.value || '');
-    const { data } = useRequest(() => queryData(props.catalog, props.dictCode),
+    const { data } = useRequest(() => queryData(props.catalog, props.dictCode, props.queryApi),
         {
             loadingDelay: 1000,
             refreshDeps: [props.catalog, props.dictCode]
