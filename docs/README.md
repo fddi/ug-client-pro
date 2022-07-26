@@ -4,7 +4,7 @@ Low code front-end management platform scaffold.
 
 
 ## 项目特点
-- 提供一套的前端管理平台界面方案，开箱即用。
+- 提供一套管理平台界面方案，开箱即用。
 - 支持低代码方案：JSON配置生成动态表单。
 - 支持低代码方案：JSON配置生成标准增删查改界面。
 - 支持微前端架构：[qiankun](https://qiankun.umijs.org/)。
